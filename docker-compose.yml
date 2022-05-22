@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  webapp:
+    container_name: golf-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    image: frontend
+    networks:
+      - default
+      - bangpragolfclub-reverseproxy_default
+
+#define network
+networks:
+  default:
+    driver: bridge
+  bangpragolfclub-reverseproxy_default:
+    external: true

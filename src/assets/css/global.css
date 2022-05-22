@@ -1,0 +1,109 @@
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Prompt-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Prompt';
+  font-style: medium;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Prompt-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/Prompt-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('../fonts/Prompt-Black.ttf') format('truetype');
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-y: overlay;
+}
+
+body {
+  font-family: 'Prompt', sans-serif !important;
+  /* padding-top: 3.5rem; */
+}
+
+.component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.component-fade-enter-from,
+.component-fade-leave-to {
+  opacity: 0;
+}
+
+.component-fade-up-enter-active,
+.component-fade-up-leave-active {
+  transition: all 0.4s ease;
+}
+
+.component-fade-up-enter,
+.component-fade-up-leave-to {
+  transform: translateY(-10%);
+  opacity: 0;
+}
+
+.list-enter-active,
+.list-leave-active,
+.list-move {
+  transition: 2s ease-in-out;
+  transition-property: opacity;
+}
+
+.list-enter {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.list-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+.enable-fade-in {
+  animation: fadeIn 0.25s ease-in-out forwards;
+}
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

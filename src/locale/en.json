@@ -1,0 +1,37 @@
+{
+  "next": "Next",
+  "back": "Back",
+  "payOmise": "Checkout",
+  "total": "Total",
+  "title": "Title",
+  "firstname": "First name",
+  "lastname": "Last name",
+  "fullName": "Name",
+  "phone": "Mobile phone",
+  "email": "E-mail",
+  "ticket": "Coupon",
+  "status": "Status",
+  "golfName": "Bangpra Golf Club",
+  "purchase": {
+    "topic": {
+      "plan": "Buy Coupon",
+      "register": "Information Details",
+      "payment": "Review Your Information",
+      "status": "Your Coupon"
+    },
+    "status": {
+      "redeemed": "USED COUPON",
+      "noRedeemed": "READY TO USE",
+      "noPaid": "NOT PAID",
+      "isRefunded": "REFUNDED",
+      "failed": "PURCHASE STATUS IS FAILED",
+      "pending": "TRANSACTION PENDING",
+      "reversed": "PURCHASE STATUS IS REVERSED"
+    },
+    "each": "no coupon | {n} coupon | {n} coupons",
+    "checkemail": "Please check your email inbox for a confirmation email regarding your recent purchase.",
+    "agree": "I have read and accept {0}.",
+    "policy": "the policy",
+    "secure": "Please enable 3D Secure"
+  }
+}

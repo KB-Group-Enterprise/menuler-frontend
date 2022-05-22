@@ -1,0 +1,3 @@
+# Ignore format file ( Add... According to the needs of the project )
+node_modules
+dist
