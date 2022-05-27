@@ -3,7 +3,7 @@
     class="w-full bg-white h-14 flex md:px-10 px-2 items-center shadow text-main justify-between"
   >
   <div class="w-full flex justify-center items-center">
-    ตระกร้าสินค้า x ชิ้น
+    ตระกร้าสินค้า {{menuBasket.length}} ชิ้น
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@
 import { useGlobal, closeSideBar } from '@/providers/global';
 import BaseToggleMenu from '../Base/BaseToggleMenu.vue';
 import { useAuth } from '@/providers/auth';
-import { modalMenuSelect,modalMenuBasket } from '@/composable/menu-state';
+import { modalMenuSelect,modalMenuBasket,menuBasket } from '@/composable/menu-state';
 
 console.log(!(modalMenuSelect && modalMenuBasket));
 

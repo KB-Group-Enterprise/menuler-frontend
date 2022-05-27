@@ -12,14 +12,16 @@
         </div>
         <h1 class="ml-2 text-2xl font-bold text-main w-full text-center pt-2">MENULER</h1>
         <p class="ml-2 text-xs font-bold text-main w-full text-center -mt-1 uppercase tracking-[0.3rem]">the smart menu</p>
-        <div class="mt-4" v-for="(topic,index) in 3" :key="index">
+        <div class="mt-4" v-for="(topic,index) in 1" :key="index">
           <div class="pl-4 text-xl">Topic</div>
       <div class="grid grid-cols-2 gap-4 mt-2 px-4">
-        <div v-for="(item,index) in 11" :key="index" class="flex flex-col w-full items-center" @click="selectMenu(item)">
+        <div v-for="(item,index) in menu.menu" :key="index" class="flex flex-col w-full items-center" @click="selectMenu(item)">
           <div class="flex flex-col w-full">
-          <div class="w-full h-48 rounded bg-gray-300"></div>
-          <div>xxxxxxxxxxx</div>
-          <div class="text-xs">xx.xx ฿</div>
+          <div class="w-full h-48 rounded bg-gray-300 overflow-hidden">
+          <img :src="item.imageUrl" class="w-full h-full rounded" />
+          </div>
+          <div>{{item.foodName}}</div>
+          <div class="text-xs">{{item.price}} ฿</div>
           </div>
         </div>
       </div>
@@ -37,18 +39,46 @@ import LayoutContainer from "@/components/Layout/LayoutContainer.vue";
 import MenuBottombar from '@/components/Menu/MenuBottombar.vue';
 import MenuBasket from '@/components/Menu/MenuBasket.vue';
 import MenuSelector from "@/components/Menu/MenuSelector.vue"
-import { modalMenuSelect,modalMenuBasket } from '@/composable/menu-state';
+import { modalMenuSelect,modalMenuBasket,menuItem } from '@/composable/menu-state';
 import { useRoute } from 'vue-router';
+import { useEapi } from '@/providers';
 
   const route = useRoute()
 
   const token = route.params.token
+  const restaurantToken = ref('')
+  const eapi = useEapi()
+  const menu = ref<any>({})
 
-  console.log(token);
+  const fetchTokenData = async () => {
+    const result = await eapi.menu.getRestaurantByToken(token)
+    if(result.success && result.data){
+      restaurantToken.value = result.data.restaurantId
+      console.log(restaurantToken.value);
+    }
+  }
+
+  const fetchMenu = async () => {
+    const result = await eapi.menu.getMenuByToken(restaurantToken.value)
+    if(result.success && result.data){
+      menu.value = result.data
+    }
+  }
+
+  const fetchData = async () => {
+    await fetchTokenData()
+    await fetchMenu()
+    console.log(menu.value.menu);
+  }
+
+  fetchData()
+
+
   
 
   const selectMenu = (item:any) => {
     modalMenuSelect.value = true
+    menuItem.value = item
   }
 
   const basketMenu = (item:any) => {

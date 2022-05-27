@@ -6,7 +6,7 @@
         Images
     </div>
     <div class="px-8">
-        <div class="w-full bg-white rounded-md px-4 py-2 -mt-5 shadow">Item name</div>
+        <div class="w-full bg-white rounded-md px-4 py-2 -mt-5 shadow">{{menuItem.foodName}}</div>
     </div>
     <div class="px-4 mt-4 flex flex-col gap-4">
         <div class="flex flex-col" v-for="(item,index) in 3" :key="index">
@@ -20,41 +20,31 @@
         </div>
     </div>
     <div class="flex flex-row justify-center gap-x-4 mt-4">
-        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl">-</div>
-        <div class="h-10 flex justify-center items-center text-2xl">1</div>
-        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl">+</div>
+        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="menuCount--">-</div>
+        <div class="w-10 h-10 flex justify-center items-center text-2xl">{{menuCount}}</div>
+        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="menuCount++">+</div>
     </div>
     <div class="px-4 mt-4">
-        <div class="w-full bg-gray-50 py-2 rounded-md shadow text-center">เพิ่ม</div>
+        <div class="w-full bg-gray-50 py-2 rounded-md shadow text-center" @click="addMenu">เพิ่ม</div>
     </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, reactive, readonly, watch, ref, onMounted } from 'vue';
-import { modalMenuSelect } from '@/composable/menu-state';
+import { computed, reactive, readonly, watch, ref, defineProps, onMounted } from 'vue';
+import { modalMenuSelect,menuItem,menuCount,menuBasket } from '@/composable/menu-state';
 
 const close = () => {
     modalMenuSelect.value = false
     console.log('close');
-    
+    menuCount.value = 1
 }
 
-
-const props = defineProps({
-    item: {
-        type: Object,
-        required:true,
-    },
-    name: {
-        type : String,
-        required:false,
-        default:'1'
+const addMenu = () => {
+    for (let index = 0; index < menuCount.value; index++) {
+        menuBasket.value.push(menuItem.value.id)
     }
-})
-
-onMounted(() =>{
-    console.log(props);
-    
-})
+    console.log(menuBasket.value);
+    close()
+}
 </script>
