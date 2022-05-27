@@ -5,8 +5,11 @@
   >
     <!-- <LayoutNavbar />
     <LayoutSidebar /> -->
-    <Transition name="component-fade">
+    <Transition name="component-fade bg-red-500">
+      <div class="max-w-md mx-auto relative pb-14">
+        <!-- <layout-navbar /> -->
       <router-view />
+      </div>
     </Transition>
     <LayoutGlobalModal />
   </div>
