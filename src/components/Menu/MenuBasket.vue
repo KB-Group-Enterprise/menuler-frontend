@@ -31,7 +31,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, reactive, readonly, watch, ref, defineProps, onMounted } from 'vue';
+import { computed, reactive, readonly, watch, ref, onMounted } from 'vue';
 import { modalMenuBasket } from '@/composable/menu-state';
 
 const close = () => {
