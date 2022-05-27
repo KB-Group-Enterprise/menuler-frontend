@@ -1,39 +1,25 @@
-import { UseEapiConfig } from '../eapi';
+import { UseEapiConfig,EazyApi} from '../eapi';
 import { boolean } from "yup"
-import { EazyApi } from "../eapi"
 
 export interface WebsiteConfig {
     isEnablePayment: boolean;
 }
 
-export function getPaymentEndpoint(eapi: EazyApi) {
+export function getMenuEndpoint(eapi: EazyApi) {
     return {
-        getPrice(useConfig?: UseEapiConfig) {
+        getRestaurantByToken(token:any,useConfig?: UseEapiConfig) {
             return eapi.useEazyApi({
                 method: 'get',
-                endpoint: '/ticket/price',
+                endpoint: '/table/token/:token',
+                params:{token}
             },useConfig)
         },
-        getConfig(useConfig?: UseEapiConfig) {
-            return eapi.useEazyApi<WebsiteConfig>({
+        getMenuByToken(token:any,useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
                 method: 'get',
-                endpoint: '/ticket/config',
+                endpoint: '/menu/restaurant/:token',
+                params:{token}
             },useConfig)
         },
-        verifyPassword(password: string, useConfig?: UseEapiConfig) {
-            return eapi.useEazyApi<boolean>({
-                method: 'post',
-                endpoint: '/ticket/verify/password',
-                data: { password }
-            },useConfig)
-        },
-        findStatusByEmail(password: string, email: string, useConfig?: UseEapiConfig) {
-            return eapi.useEazyApi<any[]>({
-                method: 'post',
-                endpoint: '/ticket/status/:email',
-                params: { email },
-                data: { password }
-            })
-        }
     }
 }
