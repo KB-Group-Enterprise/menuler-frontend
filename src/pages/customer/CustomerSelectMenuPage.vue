@@ -18,7 +18,7 @@
         <div v-for="(item,index) in menuList.menu" :key="index" class="flex flex-col w-full items-center" @click="selectMenu(item)">
           <div class="flex flex-col w-full">
           <div class="w-full h-48 rounded bg-gray-300 overflow-hidden">
-          <img :src="item.imageUrl" class="w-full h-full rounded" />
+          <img :src="item.imageUrl" class="w-full h-full rounded object-cover" />
           </div>
           <div>{{item.foodName}}</div>
           <div class="text-xs">{{item.price}} ฿</div>
