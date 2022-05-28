@@ -34,6 +34,13 @@ export function getBusinessEndpoint(eapi: EazyApi) {
                 endpoint: '/restaurant/:id',
                 params: { id },
             }, useConfig)
+        },
+        addResturant(payload: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi<any>({
+                method: 'post',
+                endpoint: '/restaurant',
+                data: payload
+            }, useConfig);
         }
     }
 }

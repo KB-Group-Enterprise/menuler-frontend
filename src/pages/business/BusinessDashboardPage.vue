@@ -21,13 +21,18 @@
                 สร้างเมื่อ {{ formatDateLocale(resturant.registerOn) }}
               </p>
               <div class="flex space-x-2">
-              <BaseButtomTW>
+              <BaseButtomTW @click="$router.push('/business/menu')">
                 จัดการเมนู
               </BaseButtomTW>
-              <BaseButtomTW>
+              <BaseButtomTW @click="$router.push('/business/table')">
                 จัดการโต๊ะ
               </BaseButtomTW>
               </div>
+          </div>
+          <div v-else class="flex justify-center">
+            <BaseButtomTW @click="addResturant">
+               เพิ่มร้าน
+            </BaseButtomTW>
           </div>
         </div>
       </div>
@@ -41,16 +46,20 @@ import { useEapi } from '@/providers';
 import { RestaurantListItem } from '@/types/dto.types';
 import formatDateLocale from '@/utils/helper/formatDateLocale';
 import { sleeper } from '@/utils/helper/sleeper';
-import { ref } from '@vue/runtime-dom';
+import { computed, ref } from '@vue/runtime-dom';
 import BaseButtomTW from '@/components/Base/BaseButtomTW.vue';
 import { useAuth } from '@/providers/auth';
+import Swal from 'sweetalert2';
+import { POSITION, useToast } from 'vue-toastification';
+import { loadIcon } from '@iconify/vue';
 const isLoading = ref(false);
 const eapi = useEapi();
-const resturant = ref<RestaurantListItem | null>(null);
 const auth = useAuth();
 
-const profile = auth.state.user;
-resturant.value = profile?.restaurant;
+const profile = computed(() => auth.state.user);
+;
+const resturant = computed(() => profile?.value?.restaurant);
+
 
 // const fetchResturant = async (id: string) => {
 //   isLoading.value = true;
@@ -62,6 +71,49 @@ resturant.value = profile?.restaurant;
 //     resturantList.value = 
 //   }
 // };
+const toast = useToast();
+
+const addResturant = async () => {
+  	
+const { value: formValues } = await (Swal.fire)({
+  title: 'เพิ่มร้านอาหาร',
+  html:
+    '<div class="flex flex-col">' +
+    '<label>ชื่อร้านอาหาร</label>' +
+    '<input id="swal-input1" class="swal2-input">' +
+    '<label class="mt-2">ที่อยู่ร้านอาหาร</label>' +
+    '<input id="swal-input2" class="swal2-input">'+
+    '</div>'
+    ,
+
+  focusConfirm: false,
+  showCancelButton: true,
+  preConfirm: () => {
+    return [
+      (document.getElementById('swal-input1') as any).value,
+      (document.getElementById('swal-input2') as any).value
+    ]
+  }
+})
+if (formValues) {
+  if (!formValues.every(i => Boolean(i))) {
+    toast.error("กรุณากรอกข้อมูลให้ถูกต้อง", { position: POSITION.BOTTOM_CENTER })
+  }
+  const name = formValues[0];
+  const location = formValues[1];
+  const payload = {
+    restaurantName: name,
+    location: location,
+  }
+  console.log(payload)
+  const result = await eapi.business.addResturant(payload, { noticeSuccess: true });
+  if (result.success) {
+    auth.fetchProfile();
+  }
+}
+
+
+}
 
 
 // fetchMenu();
