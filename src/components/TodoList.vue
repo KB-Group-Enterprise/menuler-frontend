@@ -69,8 +69,8 @@ const handleClick = async (key?: string) => {
         .catch((e) => console.log(e));
       break;
     case "auth-token":
-      await auth.login({ username: "test", password: "asd123456" });
-      alert(auth.state.user.profile.username);
+      // await auth.login({ username: "test", password: "asd123456" });
+      // alert(auth.state.user.profile.username);
       break;
     case "auth-route":
       router.push({ name: "Lobby" });

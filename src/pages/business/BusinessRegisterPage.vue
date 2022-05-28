@@ -4,12 +4,16 @@
       <span class="font-semibold text-bl">Menuler</span>
       Business
     </div>
-    <div class="text-center text-lg my-2">เข้าสู่ระบบ</div>
-    <BusinessLoginForm />
+    <div class="text-center text-lg my-2">สมัครสมาชิก</div>
+    <BusinessRegisterForm />
   </BaseContainer>
 </template>
 
 <script setup lang="ts">
 import BaseContainer from '../../components/Base/BaseContainer.vue';
-import BusinessLoginForm from '../../components/Business/BusinessLoginForm.vue';
+import BusinessRegisterForm from '../../components/Business/BusinessRegisterForm.vue';
 </script>
+
+<style scoped>
+
+</style>
