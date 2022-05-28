@@ -15,10 +15,10 @@
         <div class="mt-4" v-for="(topic,index) in 1" :key="index">
           <div class="pl-4 text-xl">Topic</div>
       <div class="grid grid-cols-2 gap-4 mt-2 px-4">
-        <div v-for="(item,index) in menu.menu" :key="index" class="flex flex-col w-full items-center" @click="selectMenu(item)">
+        <div v-for="(item,index) in menuList.menu" :key="index" class="flex flex-col w-full items-center" @click="selectMenu(item)">
           <div class="flex flex-col w-full">
           <div class="w-full h-48 rounded bg-gray-300 overflow-hidden">
-          <img :src="item.imageUrl" class="w-full h-full rounded" />
+          <img :src="item.imageUrl" class="w-full h-full rounded object-cover" />
           </div>
           <div>{{item.foodName}}</div>
           <div class="text-xs">{{item.price}} ฿</div>
@@ -39,21 +39,19 @@ import LayoutContainer from "@/components/Layout/LayoutContainer.vue";
 import MenuBottombar from '@/components/Menu/MenuBottombar.vue';
 import MenuBasket from '@/components/Menu/MenuBasket.vue';
 import MenuSelector from "@/components/Menu/MenuSelector.vue"
-import { modalMenuSelect,modalMenuBasket,menuItem } from '@/composable/menu-state';
+import { modalMenuSelect,modalMenuBasket,menuItem,menuList,tableToken,restaurantToken,tableId } from '@/composable/menu-state';
 import { useRoute } from 'vue-router';
 import { useEapi } from '@/providers';
 
   const route = useRoute()
 
-  const token = route.params.token
-  const restaurantToken = ref('')
   const eapi = useEapi()
-  const menu = ref<any>({})
 
   const fetchTokenData = async () => {
-    const result = await eapi.menu.getRestaurantByToken(token)
+    const result = await eapi.menu.getRestaurantByToken(tableToken.value)
     if(result.success && result.data){
       restaurantToken.value = result.data.restaurantId
+      tableId.value = result.data.id
       console.log(restaurantToken.value);
     }
   }
@@ -61,14 +59,15 @@ import { useEapi } from '@/providers';
   const fetchMenu = async () => {
     const result = await eapi.menu.getMenuByToken(restaurantToken.value)
     if(result.success && result.data){
-      menu.value = result.data
+      menuList.value = result.data
     }
   }
 
   const fetchData = async () => {
+    tableToken.value = route.params.token
     await fetchTokenData()
     await fetchMenu()
-    console.log(menu.value.menu);
+    console.log(menuList.value.menu);
   }
 
   fetchData()

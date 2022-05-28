@@ -1,14 +1,14 @@
 <template>
   <div class="w-full min-h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20">
-      <div class="absolute right-2" @click="close">x</div>
+      <div class="absolute right-2 text-2xl" @click="close">x</div>
       <div class="w-full"> 
     <div class="w-full h-60 bg-gray-50 flex justify-center items-center">
-        Images
+        <img :src="menuItem.imageUrl" class="w-full h-full rounded object-cover" />
     </div>
-    <div class="px-8">
+    <div class="px-8 absolute w-full">
         <div class="w-full bg-white rounded-md px-4 py-2 -mt-5 shadow">{{menuItem.foodName}}</div>
     </div>
-    <div class="px-4 mt-4 flex flex-col gap-4">
+    <div class="px-4 mt-8 flex flex-col gap-4">
         <div class="flex flex-col" v-for="(item,index) in 3" :key="index">
             <div>Topic</div>
             <div class="text-sm px-4">
