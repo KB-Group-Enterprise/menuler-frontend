@@ -9,7 +9,9 @@
     <div class="grid grid-cols-3" v-for="(item,index) in menuBasket" :key="index" @click="test">
         <div class="w-full h-full">
         <div class="flex justify-center items-center p-4">
-        <div class="w-20 h-20 bg-gray-300 flex justify-center items-center">Images</div>
+        <div class="w-20 h-20 bg-gray-300 flex justify-center items-center">
+        <img :src="findMenuById(item).imageUrl" class="w-full h-full rounded object-cover" />
+        </div>
         </div>
         </div>
         <div class="w-full h-full flex justify-center flex-col">
