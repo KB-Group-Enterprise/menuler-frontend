@@ -16,3 +16,8 @@ export interface RestaurantListItem {
 export interface AllResturantResponseDto {
   restaurantList: RestaurantListItem[];
 }
+
+interface ProfieDto {
+  email: string;
+  restaurant?: any;
+}

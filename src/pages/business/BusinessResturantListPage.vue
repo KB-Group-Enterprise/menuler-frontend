@@ -9,16 +9,17 @@
         </div>
         <div class="text-center text-lg my-2">ร้านอาหาร</div>
         <div class="mx-4 space-y-2">
-            <div v-if="resturant" class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
+          <div v-for="item in resturantList" :key="item.id">
+            <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
               <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">
-                <span :class="[resturant.isActivate ? 'text-green-400' : 'text-gray-400']">
-                    {{ resturant.status === 'OPEN' ? 'เปิด' : 'ปิด' }}
+                <span :class="[item.isActivate ? 'text-green-400' : 'text-gray-400']">
+                    {{ item.status === 'OPEN' ? 'เปิด' : 'ปิด' }}
                 </span> 
-                {{ resturant.restaurantName }}
+                {{ item.restaurantName }}
               </h5>
               <hr />
               <p class="text-gray-700 text-base mb-4">
-                สร้างเมื่อ {{ formatDateLocale(resturant.registerOn) }}
+                สร้างเมื่อ {{ formatDateLocale(item.registerOn) }}
               </p>
               <div class="flex space-x-2">
               <BaseButtomTW>
@@ -28,6 +29,7 @@
                 จัดการโต๊ะ
               </BaseButtomTW>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -43,28 +45,22 @@ import formatDateLocale from '@/utils/helper/formatDateLocale';
 import { sleeper } from '@/utils/helper/sleeper';
 import { ref } from '@vue/runtime-dom';
 import BaseButtomTW from '@/components/Base/BaseButtomTW.vue';
-import { useAuth } from '@/providers/auth';
-const isLoading = ref(false);
+const isLoading = ref(true);
 const eapi = useEapi();
-const resturant = ref<RestaurantListItem | null>(null);
-const auth = useAuth();
+const resturantList = ref<RestaurantListItem[]>([]);
 
-const profile = auth.state.user;
-resturant.value = profile?.restaurant;
+const fetchMenu = async () => {
+  isLoading.value = true;
+  const result = await eapi.business.getResturant();
+  //   await sleeper(1000);
+  isLoading.value = false;
+  //   console.log(JSON.stringify(result.data));
+  if (result.success && result.data) {
+    resturantList.value = result.data.restaurantList;
+  }
+};
 
-// const fetchResturant = async (id: string) => {
-//   isLoading.value = true;
-//   const result = await eapi.business.getResturantById();
-//   //   await sleeper(1000);
-//   isLoading.value = false;
-//   //   console.log(JSON.stringify(result.data));
-//   if (result.success && result.data) {
-//     resturantList.value = 
-//   }
-// };
-
-
-// fetchMenu();
+fetchMenu();
 </script>
 
 <style scoped></style>

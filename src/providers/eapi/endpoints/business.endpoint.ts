@@ -1,3 +1,4 @@
+import { RestaurantListItem } from './../../../types/dto.types.d';
 import { AllResturantResponseDto, postRegisterDto } from '../../../types/dto.types';
 import { UseEapiConfig, EazyApi } from '../eapi';
 
@@ -26,6 +27,13 @@ export function getBusinessEndpoint(eapi: EazyApi) {
                 method: 'get',
                 endpoint: '/restaurant/get/all'
             })
+        },
+        getResturantById(id: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi<RestaurantListItem>({
+                method: 'get',
+                endpoint: '/restaurant/:id',
+                params: { id },
+            }, useConfig)
         }
     }
 }

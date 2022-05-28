@@ -42,8 +42,8 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   if (auth.state.loggedIn || to.meta.auth) {
-    // await auth.fetchProfile();
-    await auth.checkAcessToken();
+    await auth.fetchProfile();
+    // await auth.checkAcessToken();
     console.log({ loggedIn: auth.state.loggedIn })
     if (!auth.state.loggedIn) {
       return { name: 'BusinessLoginPage' };
