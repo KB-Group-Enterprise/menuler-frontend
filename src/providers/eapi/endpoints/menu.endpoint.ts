@@ -21,5 +21,12 @@ export function getMenuEndpoint(eapi: EazyApi) {
                 params:{token}
             },useConfig)
         },
+        createOrder(payload:any,useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/order/create',
+                data: payload 
+            },useConfig)
+        },
     }
 }
