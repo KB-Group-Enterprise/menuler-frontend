@@ -2,6 +2,7 @@ import { Swaler } from '@/utils/helper/swaler';
 import { AxiosInstance, AxiosResponse } from 'axios';
 import Swal from 'sweetalert2';
 import { http } from '../http';
+import { getBusinessEndpoint } from './endpoints/business.endpoint';
 import { getMenuEndpoint } from './endpoints/menu.endpoint';
 import { getPaymentEndpoint } from './endpoints/payment.endpoint';
 
@@ -44,6 +45,7 @@ export function initEapi() {
     healthCheck: () =>
       eapi.useEazyApi({ method: 'get', endpoint: '/healthz' }, { noticeError: false }),
     payment: getPaymentEndpoint(eapi),
+    business: getBusinessEndpoint(eapi),
     menu: getMenuEndpoint(eapi),
   };
 }
