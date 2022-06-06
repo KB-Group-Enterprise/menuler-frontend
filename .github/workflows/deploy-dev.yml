@@ -2,7 +2,7 @@ name: deploy-non-prd
 on:
   push:
     branches:
-      - dev
+      - develop
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -10,7 +10,7 @@ jobs:
       - name: Checkout Dev
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: develop
       - name: Create .env file
         run: |
           echo VITE_API_ENDPOINT=${{ secrets.ENV_DEV_API_BASE_URL }} >> .env
