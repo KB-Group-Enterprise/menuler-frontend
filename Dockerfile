@@ -22,5 +22,5 @@ WORKDIR /usr/share/nginx/html
 
 COPY --from=build /app/dist .
 
-EXPOSE 12130
+EXPOSE 80
 
