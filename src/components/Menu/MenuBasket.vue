@@ -6,19 +6,22 @@
       <div class="px-12">
         <hr/>
       </div>
-    <div class="grid grid-cols-3" v-for="(item,index) in menuBasket" :key="index" @click="test">
+    <div class="grid grid-cols-3" v-for="(item,index) in selectedFoodList" :key="index">
+        <!-- {{ item.menuId }}
+        {{ findMenuById(item.menuId).imageUrl }}
+        {{findMenuById(item.menuId).price}} -->
         <div class="w-full h-full">
         <div class="flex justify-center items-center p-4">
         <div class="w-20 h-20 bg-gray-300 flex justify-center items-center">
-        <img :src="findMenuById(item).imageUrl" class="w-full h-full rounded object-cover" />
+        <img :src="findMenuById(item.menuId).imageUrl" class="w-full h-full rounded object-cover" />
         </div>
         </div>
         </div>
         <div class="w-full h-full flex justify-center flex-col">
-        <div>{{findMenuById(item).foodName}}</div>
-        <div class="text-xs">{{findMenuById(item).price}} ฿</div>
+        <div>{{findMenuById(item.menuId).foodName}}</div>
+        <div class="text-xs">{{findMenuById(item.menuId).price}} ฿</div>
         </div>
-        <div class="text-xl w-full flex justify-end items-center"><div class="w-10 h-10 flex justify-center items-center rounded-full shadow mr-4" @click="removeMenuByIndex(index)">X</div></div>
+        <div class="text-xl w-full flex justify-end items-center cursor-pointer"><div class="w-10 h-10 flex justify-center items-center rounded-full shadow mr-4" @click="removeMenuByIndex(item.foodOrderId)">X</div></div>
         <div class="col-span-3 px-8">
         <hr/>
         </div>
@@ -31,8 +34,10 @@
 </template>
 <script lang="ts" setup>
 import { computed, reactive, readonly, watch, ref, defineProps, onMounted, toRaw } from 'vue';
-import { modalMenuBasket,menuItem,menuCount,menuBasket,menuList,tableToken,restaurantToken,tableId } from '@/composable/menu-state';
+import { modalMenuBasket,menuItem,menuCount,menuBasket,menuList,tableToken,restaurantToken,tableId, selectedFoodList, username, userId } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
+import { useSocketIO } from '@/composable/socket';
+const { socket } = useSocketIO();
 
   const eapi = useEapi()
 
@@ -43,12 +48,25 @@ const close = () => {
 }
 
 const findMenuById = (id:any) => {
-    console.log(menuList.value.menu);
+    // console.log(menuList.value.menu);
     return menuList.value.menu.find( (x:any) => x.id === id)
 }
 
-const removeMenuByIndex = (index:any) => {
-    menuBasket.value.splice(index,1)
+const removeMenuByIndex = (foodOrderId: string) => {
+    // console.log(foodOrderId)
+    // menuBasket.value.splice(index,1)
+    console.log({
+        userId: userId.value,
+        username: username.value,
+        tableToken: tableToken.value,
+        foodOrderId: foodOrderId
+    })
+    socket.emit('deselectFood', {
+        userId: userId.value,
+        username: username.value,
+        tableToken: tableToken.value,
+        foodOrderId: foodOrderId
+    })
 }
 
 const order = async () => {
@@ -62,14 +80,8 @@ const order = async () => {
     restaurantId: restaurantToken.value,
     tableId: tableId.value
     }
-    console.log(payload)
+    // console.log(payload)
     const result = await eapi.menu.createOrder(payload,{noticeSuccess:true})
-}
-
-
-const test = () => {
-    console.log(menuItem.value);
-    
 }
 
 

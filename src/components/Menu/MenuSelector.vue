@@ -31,20 +31,32 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, reactive, readonly, watch, ref, defineProps, onMounted } from 'vue';
-import { modalMenuSelect,menuItem,menuCount,menuBasket } from '@/composable/menu-state';
+import { computed, reactive, readonly, watch, ref, defineProps, onMounted, toRaw } from 'vue';
+import { modalMenuSelect,menuItem,menuCount,menuBasket, username, tableToken } from '@/composable/menu-state';
+import { useSocketIO } from '@/composable/socket';
+const { socket } = useSocketIO();
 
 const close = () => {
     modalMenuSelect.value = false
-    console.log('close');
+    // console.log('close');
     menuCount.value = 1
 }
 
 const addMenu = () => {
+    console.log(toRaw(menuItem.value))
     for (let index = 0; index < menuCount.value; index++) {
-        menuBasket.value.push(menuItem.value.id)
+        // menuBasket.value.push(menuItem.value.id)
+        socket.emit('selectFood', {
+            username: username.value,
+            tableToken: tableToken.value,
+            selectedFood: {
+                menuId: menuItem.value.id,
+                foodName: menuItem.value.foodName,
+                selectedOption: [],
+            }
+        })
     }
-    console.log(menuBasket.value);
+    // console.log(menuBasket.value);
     close()
 }
 </script>
