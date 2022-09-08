@@ -1,5 +1,5 @@
-import { MenuItem, SelectedFoodItem } from "@/types/dto.types";
-import { ref } from "vue";
+import { MenuItem, MenuState, SelectedFoodItem } from "@/types/dto.types";
+import { reactive, ref } from "vue";
 
 export const modalMenuSelect = ref<boolean>(false)
 export const modalMenuBasket = ref<boolean>(false)
@@ -13,3 +13,21 @@ export const tableId = ref('')
 export const restaurantToken = ref('')
 export const username = ref('');
 export const userId = ref('');
+export const restaurantId = ref('')
+export const clientGroupId = ref('')
+export const notiTableData = ref<Record<string,any>>({})
+
+// export const menuState = reactive<MenuState>({
+//     modalMenuSelect : false,
+//     modalMenuBasket : false,
+//     menuItem : {} as any,
+//     menuCount : 1,
+//     menuBasket : [],
+//     selectedFoodList : [],
+//     menuList : {},
+//     tableToken : '',
+//     tableId : '',
+//     restaurantToken : '',
+//     username : '',
+//     userId : '',
+// })

@@ -1,6 +1,7 @@
 <template>
   <LayoutContainer>
-    <div class="bg-gray-100 max-w-2xl w-full h-full min-h-screen">
+    <BaseLoading v-if="isLoading" />
+    <div v-else class="bg-gray-100 max-w-2xl w-full h-full min-h-screen">
       <div
         class="fixed w-full max-w-md transition-all duration-500 mx-auto"
         :class="modalMenuSelect ? ' translate-y-[0%] ' : ' translate-y-[100%] '"
@@ -49,6 +50,7 @@
           <hr class="mt-2" />
         </div>
       </div>
+      <div class="text-red-500" @click="leaveTable">ออกจากโต๊ะ</div>
     </div>
   </LayoutContainer>
 </template>
@@ -70,16 +72,29 @@ import {
   username,
   menuBasket,
   selectedFoodList,
-  userId
+  userId,
+clientGroupId,
+restaurantId,
+notiTableData
 } from '@/composable/menu-state';
 import { useRoute } from 'vue-router';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
 import { POSITION, useToast } from 'vue-toastification';
+import BaseLoading from '@/components/Base/BaseLoading.vue';
 const { socket } = useSocketIO();
 const toast = useToast();
 
-username.value = 'test';
+const name = prompt('plz enter name');
+
+username.value = name || 'test';
+
+const isApiLoading = ref(true);
+const isSocketLoading = ref(true);
+
+const isLoading = computed(() => {
+  return isApiLoading.value || isSocketLoading.value
+})
 
 socket.on('connect', () => {
   console.log('socket.io connected');
@@ -93,17 +108,32 @@ socket.on('connect', () => {
 socket.on('joinedTable', (data) => {
     // console.log('joinedTable: ', data)
     // userId.value = data.userId;
-    toast.success(`${username.value} joins the table`);
 })
 
 socket.on('deselectedFood', (data) => {
     console.log('deselectedFood', data)
 })
 
+const lastestMassage = ref('');
+
 socket.on('noti-table', (data) => {
     console.log('noti-table: ', data)
     menuBasket.value = data.selectedFoodList.map((i: any) => i.menuId);
     selectedFoodList.value = data.selectedFoodList;
+    clientGroupId.value = data.clientGroupId;
+    notiTableData.value = data;
+    
+    const message = data.message
+    console.log({
+      lastestMassage: lastestMassage.value,
+      message: message
+    })
+    if (data.message && lastestMassage.value !== message) {
+      lastestMassage.value = message
+      toast(data.message)
+    }
+
+    isSocketLoading.value = false;
     // toast.success(data.message, { position: POSITION.BOTTOM_CENTER });
 })
 
@@ -111,6 +141,13 @@ socket.on('selectedFood', (data) => {
     console.log('food selected', data)
     // toast.success(data.message, { position: POSITION.BOTTOM_CENTER });
 })
+
+const leaveTable = () => {
+  socket.emit('leaveTable', {
+    username: username.value,
+    tableToken: tableToken.value
+  })
+}
 
 
 const route = useRoute();
@@ -122,6 +159,7 @@ const fetchTokenData = async () => {
   if (result.success && result.data) {
     restaurantToken.value = result.data.restaurantId;
     tableId.value = result.data.id;
+    restaurantId.value = result.data.restaurantId;
     console.log(restaurantToken.value);
   }
 };
@@ -134,10 +172,11 @@ const fetchMenu = async () => {
 };
 
 const fetchData = async () => {
-  tableToken.value = route.params.token;
+  tableToken.value = route.params.token as any as string;
   await fetchTokenData();
   await fetchMenu();
   console.log(menuList.value.menu);
+  isApiLoading.value = false
 };
 
 fetchData();

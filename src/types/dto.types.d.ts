@@ -42,3 +42,18 @@ export interface SelectedFoodItem {
   selectedOption: any[];
   foodOrderId: string;
 }
+
+export interface MenuState {
+ modalMenuSelect : boolean;
+ modalMenuBasket : boolean;
+ menuItem : MenuItem
+ menuCount : number;
+ menuBasket : any[]
+ selectedFoodList : SelectedFoodItem[]
+ menuList : any
+ tableToken : string
+ tableId : string
+ restaurantToken : string
+ username : string;
+ userId : string;
+}
