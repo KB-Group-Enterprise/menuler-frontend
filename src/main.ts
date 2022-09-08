@@ -12,7 +12,7 @@ import App from './App.vue';
 // assets files
 import '@/assets/css/global.css';
 import '@/assets/css/tailwind.css';
-import 'tw-elements';
+// import 'tw-elements';
 import 'sweetalert2/src/sweetalert2.scss';
 import 'vue-toastification/dist/index.css';
 import 'vue3-lottie/dist/style.css';
