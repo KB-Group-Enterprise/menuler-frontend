@@ -7,7 +7,7 @@
     <div class="flex flex-col justify-center items-center">
       <img
         class="w-48 h-48 my-2"
-        src="http://api.qrserver.com/v1/create-qr-code/?data=http://13.76.222.55:3000/customer/menu/3f861ea3-54d2-48da-a0d9-c8a9686f05d6!&size=400x400"
+        src="http://api.qrserver.com/v1/create-qr-code/?data=https://menuler.me/customer/menu/3f861ea3-54d2-48da-a0d9-c8a9686f05d6&size=400x400"
       />
       for our demo
       <router-link

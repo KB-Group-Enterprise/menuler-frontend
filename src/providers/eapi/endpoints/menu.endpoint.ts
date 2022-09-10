@@ -1,5 +1,6 @@
 import { UseEapiConfig,EazyApi} from '../eapi';
 import { boolean } from "yup"
+import { BussinessMenuItem } from '@/types/dto.types';
 
 export interface WebsiteConfig {
     isEnablePayment: boolean;
@@ -19,6 +20,13 @@ export function getMenuEndpoint(eapi: EazyApi) {
                 method: 'get',
                 endpoint: '/menu/restaurant/:token',
                 params:{token}
+            },useConfig)
+        },
+        getMenuByRestaurantId(id:string,useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi<{ menu: BussinessMenuItem[] }>({
+                method: 'get',
+                endpoint: '/menu/restaurant/:id',
+                params: {id}
             },useConfig)
         },
         createOrder(payload:any,useConfig?: UseEapiConfig) {

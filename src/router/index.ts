@@ -9,6 +9,7 @@ import BusinessEditTableQRPage from '../pages/business/BusinessEditTableQRPage.v
 import BusinessLoginPage from '../pages/business/BusinessLoginPage.vue';
 import BusinessRegisterPage from '../pages/business/BusinessRegisterPage.vue';
 import BusinessDashboardPage from '../pages/business/BusinessDashboardPage.vue';
+import BusinessMenuAddPage from '../pages/business/BusinessMenuAddPage.vue'
 
 
 
@@ -25,12 +26,18 @@ const routes = [
   // { name: 'Status', path: '/admin/status', component: AdminStatusPage },
   { name: 'Test', path: '/test', component: TestingPage },
   { name: 'CustomerSelectMenuPage', path: '/customer/menu/:token', component: CustomerSelectMenuPage },
+
+
   { name: 'BusinessEditInformationPage', path: '/business', component: BusinessEditInformationPage, meta: { auth: true } },
-  { name: 'BusinessEditMenuPage', path: '/business/menu', component: BusinessEditMenuPage, meta: { auth: true } },
-  { name: 'BusinessEditTableQRPage', path: '/business/table', component: BusinessEditTableQRPage, meta: { auth: true } },
-  { name: 'BusinessLoginPage', path: '/business/login', component: BusinessLoginPage },
   { name: 'BusinessRegisterPage', path: '/business/register', component: BusinessRegisterPage },
   { name: 'BusinessDashboardPage', path: '/business/dashboard', component: BusinessDashboardPage, meta: { auth: true } },
+
+  { name: 'BusinessEditMenuPage', path: '/business/menu', component: BusinessEditMenuPage, meta: { auth: true } },
+  { name: 'BusinessMenuAddPage', path: '/business/menu/add', component: BusinessMenuAddPage, meta: { auth: true } },
+
+  { name: 'BusinessEditTableQRPage', path: '/business/table', component: BusinessEditTableQRPage, meta: { auth: true } },
+  { name: 'BusinessLoginPage', path: '/business/login', component: BusinessLoginPage },
+
 
 ];
 

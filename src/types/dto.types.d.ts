@@ -57,3 +57,17 @@ export interface MenuState {
  username : string;
  userId : string;
 }
+
+interface BussinessMenuItem {
+  id: string;
+  foodName: string;
+  category: string;
+  description?: any;
+  imageUrl: string;
+  price: number;
+  menuStatus: string;
+  options: any[];
+  createdAt: string;
+  updatedAt: string;
+  restaurantId: string;
+}

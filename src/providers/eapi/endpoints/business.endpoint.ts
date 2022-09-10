@@ -29,7 +29,7 @@ export function getBusinessEndpoint(eapi: EazyApi) {
             })
         },
         getResturantById(id: string, useConfig?: UseEapiConfig) {
-            return eapi.useEazyApi<RestaurantListItem>({
+            return eapi.useEazyApi<{ restaurant: RestaurantListItem }>({
                 method: 'get',
                 endpoint: '/restaurant/:id',
                 params: { id },
