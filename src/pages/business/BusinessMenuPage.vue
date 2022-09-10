@@ -17,8 +17,8 @@
           <div class="">{{ item.price }} ฿</div>
           <div>{{ item.category }}</div>
           <div class="flex justify-between w-full">
-            <button class="text-gray-400 underline underline-offset-2">edit</button>
-            <button class="text-red-400 underline underline-offset-2">delete</button>
+            <button class="text-gray-400" @click="router.push(`menu/${item.id}`)">แก้ไข</button>
+            <button class="text-red-400">ลบ</button>
           </div>
           <!-- <div>
             <span v-if="Boolean(item.description)" >

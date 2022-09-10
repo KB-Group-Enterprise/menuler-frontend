@@ -36,5 +36,31 @@ export function getMenuEndpoint(eapi: EazyApi) {
                 data: payload 
             },useConfig)
         },
+        adminCreateMenu(payload: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/menu',
+                data: payload 
+            },useConfig)
+        },
+        adminUpdateMenu(id: string, payload: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'put',
+                endpoint: '/menu/:id',
+                params: {
+                    id: id
+                },
+                data: payload 
+            },useConfig)
+        },
+        getMenuByMenuId(id: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'get',
+                endpoint: '/menu/:id',
+                params: {
+                    id: id
+                }
+            },useConfig)
+        }
     }
 }
