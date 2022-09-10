@@ -1,6 +1,50 @@
 <template>
   <LayoutContainer>
-    <BaseLoading v-if="isLoading" />
+    <BaseLoading v-if="isApiLoading" />
+    <div v-else-if="isSocketLoading" class="bg-gray-100 max-w-2xl w-full h-full min-h-screen">
+      <div class="form-group mb-6 mx-4 my-12">
+        <div class="my-2 w-full text-center">Please enter your name</div>
+          <input type="text" 
+          v-model="name"
+          @keyup.enter="connectTable"
+          class="form-control block
+            w-full
+            px-3
+            py-1.5
+            text-base
+            font-normal
+            text-gray-700
+            bg-white bg-clip-padding
+            border border-solid border-gray-300
+            rounded
+            transition
+            ease-in-out
+            m-0
+            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput7"
+            placeholder="Name">
+            <button type="submit" class="
+            my-4
+          w-full
+          px-6
+          py-2.5
+          bg-blue-600
+          text-white
+          font-medium
+          text-xs
+          leading-tight
+          uppercase
+          rounded
+          shadow-md
+          hover:bg-blue-700 hover:shadow-lg
+          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+          active:bg-blue-800 active:shadow-lg
+          transition
+          duration-150
+          ease-in-out" @click="connectTable">Send</button>
+        </div>
+        
+    </div>
+    <BaseLoading v-else-if="isLoading" />
     <div v-else class="bg-gray-100 max-w-2xl w-full h-full min-h-screen">
       <div
         class="fixed w-full max-w-md transition-all duration-500 mx-auto"
@@ -85,9 +129,9 @@ import BaseLoading from '@/components/Base/BaseLoading.vue';
 const { socket } = useSocketIO();
 const toast = useToast();
 
-const name = prompt('plz enter name');
+// const name = prompt('plz enter name');
 
-username.value = name || 'test';
+const name = ref('')
 
 const isApiLoading = ref(true);
 const isSocketLoading = ref(true);
@@ -99,11 +143,20 @@ const isLoading = computed(() => {
 socket.on('connect', () => {
   console.log('socket.io connected');
   const tableToken = route.params.token;
+});
+
+const connectTable = () => {
+  username.value = name.value || 'test';
+  console.log({
+        username: username.value,
+        tableToken: tableToken.value,
+  },'connected');
+  
   socket.emit('joinTable', {
         username: username.value,
-        tableToken: tableToken,
+        tableToken: tableToken.value,
   })
-});
+}
 
 socket.on('joinedTable', (data) => {
     // console.log('joinedTable: ', data)
