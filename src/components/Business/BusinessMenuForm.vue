@@ -134,7 +134,7 @@ const submit = () => {
   };
 
   if (imgFile.value) {
-    payload.menuImage = imgFile;
+    payload.menuImage = imgFile.value;
   }
 
   emit('save', payload);

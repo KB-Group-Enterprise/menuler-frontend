@@ -53,6 +53,15 @@ export function getMenuEndpoint(eapi: EazyApi) {
                 data: payload 
             },useConfig)
         },
+        deleteMenu(id: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'delete',
+                endpoint: '/menu/:id',
+                params: {
+                    id: id
+                },
+            },useConfig)
+        },
         getMenuByMenuId(id: string, useConfig?: UseEapiConfig) {
             return eapi.useEazyApi({
                 method: 'get',

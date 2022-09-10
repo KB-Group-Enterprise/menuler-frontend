@@ -26,7 +26,7 @@ const createMenu = async (payload: any) => {
     formData.append('price', payload.price)
     formData.append('description', payload.description)
     formData.append('menuImage', payload.menuImage)
-    const result = await eapi.menu.adminCreateMenu(formData);
+    const result = await eapi.menu.adminCreateMenu(formData, { noticeSuccess: true });
     if (result.success) {
         router.push('/business/menu')
     }
