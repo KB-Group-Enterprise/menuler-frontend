@@ -44,18 +44,20 @@ const close = () => {
 
 const addMenu = () => {
     console.log(toRaw(menuItem.value))
-    for (let index = 0; index < menuCount.value; index++) {
-        // menuBasket.value.push(menuItem.value.id)
-        socket.emit('selectFood', {
+    const item = {
             username: username.value,
             tableToken: tableToken.value,
-            selectedFood: {
+            selectedFood: [] as any[]
+        }
+    for (let index = 0; index < menuCount.value; index++) {
+        // menuBasket.value.push(menuItem.value.id)
+        item.selectedFood.push({
                 menuId: menuItem.value.id,
                 foodName: menuItem.value.foodName,
                 selectedOption: [],
-            }
-        })
+            })
     }
+    socket.emit('selectFood', item)
     // console.log(menuBasket.value);
     close()
 }
