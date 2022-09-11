@@ -126,6 +126,7 @@ import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
 import { POSITION, useToast } from 'vue-toastification';
 import BaseLoading from '@/components/Base/BaseLoading.vue';
+import router from '@/router';
 const { socket } = useSocketIO();
 const toast = useToast();
 
@@ -221,6 +222,8 @@ const fetchMenu = async () => {
   const result = await eapi.menu.getMenuByToken(restaurantToken.value);
   if (result.success && result.data) {
     menuList.value = result.data;
+  } else {
+    router.push('/');
   }
 };
 
