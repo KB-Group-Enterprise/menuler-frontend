@@ -73,7 +73,7 @@
         the smart menu
       </p>
       <div class="mt-4" v-for="(topic, index) in 1" :key="index">
-        <div class="pl-4 text-xl">Topic</div>
+        <!-- <div class="pl-4 text-xl">Topic</div> -->
         <div class="grid grid-cols-2 gap-4 mt-2 px-4">
           <div
             v-for="(item, index) in menuList.menu"
@@ -94,7 +94,7 @@
           <hr class="mt-2" />
         </div>
       </div>
-      <div class="text-red-500" @click="leaveTable">ออกจากโต๊ะ</div>
+      <!-- <div class="text-red-500" @click="leaveTable">ออกจากโต๊ะ</div> -->
     </div>
   </LayoutContainer>
 </template>

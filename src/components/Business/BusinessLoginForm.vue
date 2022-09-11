@@ -60,7 +60,7 @@ const isLoading = ref(false);
 
 // const email = ref('admin@email.com');
 const email = ref('demo@gmail.com');
-const password = ref('Aa1223456');
+const password = ref('Aa123456');
 
 
 const auth = useAuth();

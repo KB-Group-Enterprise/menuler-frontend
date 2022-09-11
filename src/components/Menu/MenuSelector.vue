@@ -10,7 +10,7 @@
     </div>
     <div class="px-4 mt-8 flex flex-col gap-4">
         <div class="flex flex-col" v-for="(item,index) in 3" :key="index">
-            <div>Topic</div>
+            <!-- <div>Topic</div> -->
             <div class="text-sm px-4">
                 <div class="flex flex-row items-center gap-x-2" v-for="(option,index) in 4" :key="index">
                     <input type="checkbox" />
