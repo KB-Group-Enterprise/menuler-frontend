@@ -119,7 +119,9 @@ const selectUploadInput = () => {
   imageInput?.click();
 }
 
-const emit = defineEmits(['save'])
+const emit = defineEmits(['save']);
+
+
 
 const submit = () => {
   if (!imgFile.value && !props.menu) {

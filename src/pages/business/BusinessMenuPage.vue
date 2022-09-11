@@ -45,18 +45,23 @@
 import LayoutContainer from "@/components/Layout/LayoutContainer.vue";
 import { useEapi } from "@/providers";
 import { BussinessMenuItem } from "@/types/dto.types";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import BusinessHeader from "@/components/Business/BusinessHeader.vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import { useRouter } from "vue-router";
 import { Swaler } from "@/utils/helper/swaler";
+import { useAuth } from "@/providers/auth";
 
 const eapi = useEapi();
 const menus = ref<BussinessMenuItem[]>([]);
 const router = useRouter();
+const auth = useAuth();
+
+const profile = computed(() => auth.state.user);
+
 
 const fetchData = async () => {
-  const result = await eapi.menu.getMenuByRestaurantId('630f386166de60947795adfb');
+  const result = await eapi.menu.getMenuByRestaurantId(profile.value?.restaurant.id);
   if (result.success && result.data) {
     menus.value = result.data.menu;
   }

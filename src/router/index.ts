@@ -11,6 +11,8 @@ import BusinessRegisterPage from '../pages/business/BusinessRegisterPage.vue';
 import BusinessDashboardPage from '../pages/business/BusinessDashboardPage.vue';
 import BusinessMenuAddPage from '../pages/business/BusinessMenuAddPage.vue'
 import BusinessMenuEditPage from '../pages/business/BusinessMenuEditPage.vue'
+import BusinessEditRestaurantPage from '../pages/business/BusinessEditRestaurantPage.vue'
+
 
 
 
@@ -32,6 +34,8 @@ const routes = [
   { name: 'BusinessEditInformationPage', path: '/business', component: BusinessEditInformationPage, meta: { auth: true } },
   { name: 'BusinessRegisterPage', path: '/business/register', component: BusinessRegisterPage },
   { name: 'BusinessDashboardPage', path: '/business/dashboard', component: BusinessDashboardPage, meta: { auth: true } },
+  { name: 'BusinessEditRestaurantPage', path: '/business/edit', component: BusinessEditRestaurantPage, meta: { auth: true } },
+
 
   { name: 'BusinessMenuPage', path: '/business/menu', component: BusinessMenuPage, meta: { auth: true } },
   { name: 'BusinessMenuAddPage', path: '/business/menu/add', component: BusinessMenuAddPage, meta: { auth: true } },

@@ -28,9 +28,7 @@ export function getTableEndpoint(eapi: EazyApi) {
                 params: {
                     id
                 },
-                data: {
-                    payload
-                }
+                data: payload,
             }, useConfig)
         },
         deleteTableById(id: string, useConfig?: UseEapiConfig) {
