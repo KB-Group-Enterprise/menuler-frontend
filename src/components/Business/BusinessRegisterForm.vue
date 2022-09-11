@@ -52,6 +52,7 @@
       <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
         รูปภาพ
       </label>
+      <div class="flex justify-center">
       <div class="border p-2 mb-4 transition hover:border-2 cursor-pointer" @click="selectUploadInput()">
         <div v-if="previewUrl">
           <img :src="previewUrl" class="object-cover" />
@@ -60,6 +61,7 @@
           <img src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png" alt="placeholder" />
         </div>
         <input id="image-input" hidden type='file' @change="readURL" />
+      </div>
       </div>
       <div class="mb-4">
         <label class="block text-grey-darker text-sm font-bold mb-2" for="username">

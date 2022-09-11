@@ -11,6 +11,7 @@ export interface RestaurantListItem {
     isActivate: boolean;
     status: string;
     updatedAt: string;
+    restaurantImage: string[];
 }
 
 export interface AllResturantResponseDto {

@@ -7,24 +7,29 @@
         <div class="text-center text-lg my-2">ร้านอาหาร</div>
         <div class="mx-4 space-y-2">
           <div v-if="restaurant" class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-              <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">
-                <span :class="[restaurant.isActivate ? 'text-green-400' : 'text-gray-400']">
-                    {{ restaurant.status === 'OPEN' ? 'เปิด' : 'ปิด' }}
-                </span> 
-                {{ restaurant.restaurantName }}
-              </h5>
-              <hr />
-              <p class="text-gray-700 text-base mb-4">
-                สร้างเมื่อ {{ formatDateLocale(restaurant.registerOn) }}
-              </p>
-              <div class="flex space-x-2">
-              <BaseButtomTW @click="$router.push('/business/menu')">
-                จัดการเมนู
-              </BaseButtomTW>
-              <BaseButtomTW @click="$router.push('/business/table')">
-                จัดการโต๊ะ
-              </BaseButtomTW>
+            <div class="border p-2 mb-4 transition hover:border-2 cursor-pointer flex justify-center">
+              <div v-if="restaurant.restaurantImage && restaurant.restaurantImage[0]">
+                <img :src="restaurant.restaurantImage[0]" class="object-cover" />
               </div>
+              <div v-else>
+                <img src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png" alt="placeholder" />
+              </div>
+            </div>
+            <h5 class="text-gray-900 text-center text-xl leading-tight font-medium mb-2">
+              {{ restaurant.restaurantName }}
+            </h5>           
+            <span :class="[restaurant.isActivate ? 'text-green-400' : 'text-gray-400']">
+              {{ restaurant.status === 'OPEN' ? 'เปิด' : 'ปิด' }}
+            </span> 
+            <p class="text-gray-700 text-base mb-4">
+              สร้างเมื่อ {{ formatDateLocale(restaurant.registerOn) }}
+            </p>
+            <div class="grid grid-cols-2 gap-2">
+              <BaseButtomTW @click="$router.push('/business/menu')"> จัดการเมนู </BaseButtomTW>
+              <BaseButtomTW @click="$router.push('/business/table')"> จัดการโต๊ะ </BaseButtomTW>
+              <button type="button" class="inline-block px-6 py-2.5 bg-yellow-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-yellow-600 hover:shadow-lg focus:bg-yellow-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-yellow-700 active:shadow-lg transition duration-150 ease-in-out">แก้ไขร้าน</button>
+              <button type="button" class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">ออกจากระบบ</button>
+            </div>
           </div>
           <div v-else class="flex justify-center">
             <BaseLoading />
@@ -53,9 +58,8 @@ const eapi = useEapi();
 const auth = useAuth();
 
 const profile = computed(() => auth.state.user);
-;
 // const restaurant = computed(() => profile?.value?.restaurant);
-const restaurant = ref<RestaurantListItem | null>(null)
+const restaurant = ref<RestaurantListItem | null>(null);
 const toast = useToast();
 
 const fetchResturant = async () => {
@@ -65,55 +69,49 @@ const fetchResturant = async () => {
   isLoading.value = false;
   //   console.log(JSON.stringify(result.data));
   if (result.success && result.data) {
-    console.log(result.data)
-    restaurant.value = result.data.restaurant
+    console.log(result.data);
+    restaurant.value = result.data.restaurant;
   }
 };
 
-
 const addResturant = async () => {
-  	
-const { value: formValues } = await (Swal.fire)({
-  title: 'เพิ่มร้านอาหาร',
-  html:
-    '<div class="flex flex-col">' +
-    '<label>ชื่อร้านอาหาร</label>' +
-    '<input id="swal-input1" class="swal2-input">' +
-    '<label class="mt-2">ที่อยู่ร้านอาหาร</label>' +
-    '<input id="swal-input2" class="swal2-input">'+
-    '</div>'
-    ,
-
-  focusConfirm: false,
-  showCancelButton: true,
-  preConfirm: () => {
-    return [
-      (document.getElementById('swal-input1') as any).value,
-      (document.getElementById('swal-input2') as any).value
-    ]
+  const { value: formValues } = await Swal.fire({
+    title: 'เพิ่มร้านอาหาร',
+    html:
+      '<div class="flex flex-col">' +
+      '<label>ชื่อร้านอาหาร</label>' +
+      '<input id="swal-input1" class="swal2-input">' +
+      '<label class="mt-2">ที่อยู่ร้านอาหาร</label>' +
+      '<input id="swal-input2" class="swal2-input">' +
+      '</div>',
+    focusConfirm: false,
+    showCancelButton: true,
+    preConfirm: () => {
+      return [
+        (document.getElementById('swal-input1') as any).value,
+        (document.getElementById('swal-input2') as any).value,
+      ];
+    },
+  });
+  if (formValues) {
+    if (!formValues.every((i) => Boolean(i))) {
+      toast.error('กรุณากรอกข้อมูลให้ถูกต้อง', { position: POSITION.BOTTOM_CENTER });
+    }
+    const name = formValues[0];
+    const location = formValues[1];
+    const payload = {
+      restaurantName: name,
+      location: location,
+    };
+    console.log(payload);
+    const result = await eapi.business.addResturant(payload, { noticeSuccess: true });
+    if (result.success) {
+      auth.fetchProfile();
+    }
   }
-})
-if (formValues) {
-  if (!formValues.every(i => Boolean(i))) {
-    toast.error("กรุณากรอกข้อมูลให้ถูกต้อง", { position: POSITION.BOTTOM_CENTER })
-  }
-  const name = formValues[0];
-  const location = formValues[1];
-  const payload = {
-    restaurantName: name,
-    location: location,
-  }
-  console.log(payload)
-  const result = await eapi.business.addResturant(payload, { noticeSuccess: true });
-  if (result.success) {
-    auth.fetchProfile();
-  }
-}
+};
 
-
-}
-
-fetchResturant()
+fetchResturant();
 // fetchMenu();
 </script>
 
