@@ -8,10 +8,10 @@ export interface WebsiteConfig {
 
 export function getBusinessEndpoint(eapi: EazyApi) {
     return {
-        sendRegister(data: postRegisterDto,useConfig?: UseEapiConfig) {
+        sendRegister(data: any,useConfig?: UseEapiConfig) {
             return eapi.useEazyApi({
                 method: 'post',
-                endpoint: '/auth/admin/register',
+                endpoint: '/restaurant',
                 data: data,
             },useConfig)
         },

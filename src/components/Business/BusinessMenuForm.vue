@@ -1,7 +1,7 @@
 <template>
     <div class="w-full mt-6">
         <div class="border p-2 mb-4 transition hover:border-2 cursor-pointer" @click="selectUploadInput()">
-          <div v-if="image && previewUrl">
+          <div v-if="previewUrl">
             <img :src="previewUrl" class="object-cover" />
           </div>
           <div v-else>

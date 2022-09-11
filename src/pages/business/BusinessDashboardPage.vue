@@ -60,7 +60,7 @@ const toast = useToast();
 
 const fetchResturant = async () => {
   isLoading.value = true;
-  const result = await eapi.business.getResturantById('630f386166de60947795adfb');
+  const result = await eapi.business.getResturantById(profile.value?.restaurant.id);
   //   await sleeper(1000);
   isLoading.value = false;
   //   console.log(JSON.stringify(result.data));

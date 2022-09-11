@@ -7,7 +7,7 @@
         <div class="flex flex-col justify-center">
           <IconifyIcon icon="carbon:add-alt" class="mx-1"></IconifyIcon>
         </div>
-        ADD MENU
+        เพิ่มเมนู
       </div>
       <div 
       v-for="item,index in menus" 

@@ -47,20 +47,20 @@ async function loginWithToken(token: string) {
 }
 
 async function fetchProfile() {
-  state.loggedIn = true;
-  state.user = {} as any;
-  return {}
-  // try {
-  //   const res = await http.get('/auth/admin/profile');
-  //   const profile = res.data.data;
-  //   console.log(JSON.stringify(profile));
-  //   state.loggedIn = true;
-  //   state.user = profile;
-  //   return res;
-  // } catch (error: any) {
-  //   console.error(error);
-  //   return error.response;
-  // }
+  // state.loggedIn = true;
+  // state.user = {} as any;
+  // return {}
+  try {
+    const res = await http.get('/admin/profile');
+    const profile = res.data.data;
+    console.log(JSON.stringify(profile));
+    state.loggedIn = true;
+    state.user = profile;
+    return res;
+  } catch (error: any) {
+    console.error(error);
+    return error.response;
+  }
 }
 
 async function logout() {
