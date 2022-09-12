@@ -92,7 +92,7 @@
       </div>
       </div>
       <div class="mt-16" v-for="(topic, index) in 1" :key="index">
-        <div class="pl-4 text-xl">Topic</div>
+        <!-- <div class="pl-4 text-xl">Topic</div> -->
         <div class="grid grid-cols-2 gap-4 mt-2 px-4">
           <div
             v-for="(item, index) in menuList.menu"
@@ -113,7 +113,7 @@
           <hr class="mt-2" />
         </div>
       </div>
-      <div class="text-red-500" @click="leaveTable">ออกจากโต๊ะ</div>
+      <!-- <div class="text-red-500" @click="leaveTable">ออกจากโต๊ะ</div> -->
     </div>
   </LayoutContainer>
 </template>
@@ -147,6 +147,7 @@ import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
 import { POSITION, useToast } from 'vue-toastification';
 import BaseLoading from '@/components/Base/BaseLoading.vue';
+import router from '@/router';
 const { socket } = useSocketIO();
 const toast = useToast();
 
@@ -242,6 +243,8 @@ const fetchMenu = async () => {
   const result = await eapi.menu.getMenuByToken(restaurantToken.value);
   if (result.success && result.data) {
     menuList.value = result.data;
+  } else {
+    router.push('/');
   }
 };
 

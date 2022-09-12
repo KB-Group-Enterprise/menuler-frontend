@@ -10,10 +10,10 @@
       </div>
       เพิ่มโต๊ะ
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 w-full gap-10 mt-5 w-10/12 md:w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-5 w-10/12 md:w-full">
       <div v-for="table in tables" :key="table.id" class="border p-4">
         <div>
-          <img :src="table.qrcodeImageUrl" />
+          <img class="w-full" :src="table.qrcodeImageUrl" />
         </div>
         <div class="text-center font-bold text-2xl mt-2">{{ table.tableName }}</div>
         <div class="flex justify-center my-2">
@@ -31,14 +31,15 @@
         <div class="text-center" :class="[table.isActivate ? 'text-green-500' : 'text-red-500']">
           {{ table.isActivate ? 'เปิดใช้งาน' : 'ปิดใช่งาน' }}
         </div>
-        <div class="flex justify-between space-x-10 text-3xl mt-2">
+        <div class="flex justify-center space-x-10 mt-2">
           <IconifyIcon
             icon="fluent:delete-dismiss-24-filled"
-            class="mx-1 text-red-600"
+            class="mx-1 text-red-600 text-3xl"
             @click="deleteTable(table)"
           ></IconifyIcon>
-          <IconifyIcon icon="eva:download-fill" class="mx-1"></IconifyIcon>
-          <IconifyIcon icon="bxs:edit" class="mx-1" @click="editTableName(table)"></IconifyIcon>
+          <IconifyIcon icon="eva:download-fill" class="mx-1 text-3xl"></IconifyIcon>
+          <IconifyIcon icon="charm:refresh" class="mx-1 text-3xl" @click="refreshTable(table)"></IconifyIcon>
+          <IconifyIcon icon="bxs:edit" class="mx-1 text-3xl" @click="editTableName(table)"></IconifyIcon>
         </div>
       </div>
     </div>
@@ -54,6 +55,7 @@ import { useEapi } from '@/providers';
 import Swal from 'sweetalert2';
 import { Swaler } from '@/utils/helper/swaler';
 import { EapiKey } from '@/symbols/symbol';
+import { ta } from 'date-fns/locale';
 
 const auth = useAuth();
 const eapi = useEapi();
@@ -70,6 +72,11 @@ const fetchData = async () => {
     });
   }
 };
+
+const selectUploadInput = () => {
+  const imageInput = document.getElementById('image-input');
+  imageInput?.click();
+}
 
 const createTable = async () => {
   const ans = await Swal.fire({
@@ -128,6 +135,20 @@ const editTableName = async (table: any) => {
     }
   }
 };
+
+const refreshTable = async (table: any) => {
+  const ans = await Swaler.question(`ที่จะออก QR CODE ใหม่ให้กับ ${table.tableName}`)
+  if (ans.isConfirmed) {
+    const result = await eapi.table.updateTableById(table.id, {
+      isActivate: table.isActivate,
+      tableName: table.tableName,
+      isRenewQrcode: true,
+    });
+    if (result.success) {
+      fetchData();
+    }
+  }
+}
 
 const deleteTable = async (table: any) => {
   const ans = await Swaler.question(`ที่จะลบโต๊ะ ${table.tableName}`)

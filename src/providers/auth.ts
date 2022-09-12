@@ -31,6 +31,10 @@ async function login(credentials: { email: string, password: string }) {
   }
 }
 
+function getToken() {
+  return localStorage.getItem('access_token');
+}
+
 async function loginWithToken(token: string) {
   try {
     // const res = await http.get('/t', { params: { t: token } } );
@@ -88,6 +92,7 @@ export const auth = {
   fetchProfile,
   loginWithToken,
   checkAcessToken,
+  getToken,
   state: readonly(state),
 };
 
