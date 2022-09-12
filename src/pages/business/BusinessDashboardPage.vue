@@ -58,7 +58,7 @@
           <h1 class="text-center text-xl">รายการสั่งอาหาร</h1>
           <div v-for="order in orders" :key="order.id" class="w-ful bg-white rounded w-full p-2 my-2 shadow-md">
             <div>
-              <div class="font-bold">โต๊ะ {{ order.table.tableName }}</div>
+              <div class="font-bold" v-if="order.table">โต๊ะ {{ order.table.tableName }}</div>
               <div class="flex justify-between">
                 <span>{{ formatDateLocale(order.createAt) }}</span>
                 <span class="font-bold">{{ order.status }}</span>
@@ -163,5 +163,9 @@ const addResturant = async () => {
 fetchResturant();
 // fetchMenu();
 </script>
+
+
+
+
 
 <style scoped></style>
