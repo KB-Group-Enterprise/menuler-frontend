@@ -37,7 +37,9 @@
             class="mx-1 text-red-600 text-3xl"
             @click="deleteTable(table)"
           ></IconifyIcon>
-          <IconifyIcon icon="eva:download-fill" class="mx-1 text-3xl"></IconifyIcon>
+          <a :href="table.qrcodeImageUrl" :download="`${table.tableName}.png`">
+            <IconifyIcon icon="eva:download-fill" class="mx-1 text-3xl"></IconifyIcon>
+          </a>
           <IconifyIcon icon="charm:refresh" class="mx-1 text-3xl" @click="refreshTable(table)"></IconifyIcon>
           <IconifyIcon icon="bxs:edit" class="mx-1 text-3xl" @click="editTableName(table)"></IconifyIcon>
         </div>
