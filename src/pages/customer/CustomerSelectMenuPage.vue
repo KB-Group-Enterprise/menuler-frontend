@@ -84,6 +84,9 @@
         the smart menu
       </p>
       </div>
+      <div class="absolute left-4 top-3" @click="showUsers">
+        <IconifyIcon icon="clarity:users-solid" class="text-3xl" />
+      </div>
       <div class="absolute right-4 top-3" @click="orderMenu">
         <IconifyIcon icon="ep:dish-dot" class="text-3xl" />
         <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
@@ -148,6 +151,7 @@ import { useSocketIO } from '@/composable/socket';
 import { POSITION, useToast } from 'vue-toastification';
 import BaseLoading from '@/components/Base/BaseLoading.vue';
 import router from '@/router';
+import Swal from 'sweetalert2';
 const { socket } = useSocketIO();
 const toast = useToast();
 
@@ -272,6 +276,13 @@ const orderMenu = (item: any) => {
   
   modalMenuOrder.value = true;
 };
+
+const showUsers = () => {
+  Swal.fire({
+    title: 'users',
+    text: notiTableData.value.usernameInRoom.map((i: any) => i.username).join(','),
+  })
+}
 
 const item = ref<{ name: string }>({ name: 'kb' });
 </script>
