@@ -61,18 +61,37 @@
         <menu-basket :item="item" class="w-full" />
       </div>
       <div
+        class="fixed w-full max-w-md transition-all duration-500 mx-auto"
+        :class="
+          modalMenuOrder ? ' translate-x-[0%] opacity-100' : ' translate-x-[100%]  opacity-0'
+        "
+      >
+        <menu-order :item="item" class="w-full" />
+      </div>
+      <div
         class="transition-all fixed w-full max-w-md bottom-0"
-        :class="!(modalMenuSelect || modalMenuBasket) ? 'translate-y-[0%]' : 'translate-y-[100%]'"
+        :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[100%]'"
       >
         <MenuBottombar @click="basketMenu" />
       </div>
-      <h1 class="ml-2 text-2xl font-bold text-main w-full text-center pt-2">MENULER</h1>
+      <div class="transition-all fixed w-full max-w-md bg-white shadow-sm pb-2" :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[-100%]'
+        ">
+        <div class="flex flex-col justify-center">
+      <h1 class="text-2xl font-bold text-main w-full text-center pt-1">MENULER</h1>
       <p
-        class="ml-2 text-xs font-bold text-main w-full text-center -mt-1 uppercase tracking-[0.3rem]"
+        class="text-xs font-bold text-main w-full text-center -mt-1 uppercase tracking-[0.3rem]"
       >
         the smart menu
       </p>
-      <div class="mt-4" v-for="(topic, index) in 1" :key="index">
+      </div>
+      <div class="absolute right-4 top-3" @click="orderMenu">
+        <IconifyIcon icon="ep:dish-dot" class="text-3xl" />
+        <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
+          <div class="absolute inline-block top-2 -right-1 bottom-auto left-auto translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 py-1 w-5 text-xs leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-600 text-white rounded-full z-10">{{notiTableData.order.foodOrderList.length}}</div>
+        </div>
+      </div>
+      </div>
+      <div class="mt-16" v-for="(topic, index) in 1" :key="index">
         <div class="pl-4 text-xl">Topic</div>
         <div class="grid grid-cols-2 gap-4 mt-2 px-4">
           <div
@@ -105,9 +124,11 @@ import LayoutContainer from '@/components/Layout/LayoutContainer.vue';
 import MenuBottombar from '@/components/Menu/MenuBottombar.vue';
 import MenuBasket from '@/components/Menu/MenuBasket.vue';
 import MenuSelector from '@/components/Menu/MenuSelector.vue';
+import MenuOrder from '@/components/Menu/MenuOrder.vue';
 import {
   modalMenuSelect,
   modalMenuBasket,
+  modalMenuOrder,
   menuItem,
   menuList,
   tableToken,
@@ -241,6 +262,12 @@ const selectMenu = (item: any) => {
 
 const basketMenu = (item: any) => {
   modalMenuBasket.value = true;
+};
+
+const orderMenu = (item: any) => {
+  console.log('hello');
+  
+  modalMenuOrder.value = true;
 };
 
 const item = ref<{ name: string }>({ name: 'kb' });

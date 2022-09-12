@@ -3,12 +3,12 @@
     class="w-full min-h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20"
   >
     <div class="absolute right-2 text-2xl" @click="close">x</div>
-    <div class="w-full">
-      <div class="text-2xl text-center my-4">Basket</div>
+    <div class="w-full" v-if="notiTableData.order">
+      <div class="text-2xl text-center my-4">Order</div>
       <div class="px-12">
         <hr />
       </div>
-      <div class="grid grid-cols-3" v-for="(item, index) in selectedFoodList" :key="index">
+      <div class="grid grid-cols-3" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
         <!-- {{ item.menuId }}
         {{ findMenuById(item.menuId).imageUrl }}
         {{findMenuById(item.menuId).price}} -->
@@ -16,40 +16,30 @@
           <div class="flex justify-center items-center p-4">
             <div class="w-20 h-20 bg-gray-300 flex justify-center items-center">
               <img
-                :src="findMenuById(item.menuId).imageUrl"
+                :src="item.imageUrl"
                 class="w-full h-full rounded object-cover"
               />
             </div>
           </div>
         </div>
         <div class="w-full h-full flex justify-center flex-col">
-          <div>{{ findMenuById(item.menuId).foodName }}</div>
-          <div class="text-xs">{{ findMenuById(item.menuId).price }} ฿</div>
-        </div>
-        <div class="text-xl w-full flex justify-end items-center cursor-pointer">
-          <div
-            class="w-10 h-10 flex justify-center items-center rounded-full shadow mr-4"
-            @click="removeMenuByIndex(item.foodOrderId)"
-          >
-            X
-          </div>
+          <div>{{ item.foodName }}</div>
+          <div class="text-xs">{{ item.price }} ฿</div>
         </div>
         <div class="col-span-3 px-8">
           <hr />
         </div>
       </div>
-      <div class="px-4 mt-4">
-        <button class="w-full bg-gray-50 py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white" :disabled="Boolean(!selectedFoodList.length)" @click="order">
-          สั่งอาหาร
-        </button>
-      </div>
+    </div>
+    <div v-else>
+       <div class="text-2xl text-center my-4">No order yet</div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { computed, reactive, readonly, watch, ref, defineProps, onMounted, toRaw } from 'vue';
 import {
-  modalMenuBasket,
+  modalMenuOrder,
   menuItem,
   menuCount,
   menuBasket,
@@ -75,7 +65,7 @@ const eapi = useEapi();
 const toast = useToast();
 
 const close = () => {
-  modalMenuBasket.value = false;
+  modalMenuOrder.value = false;
   console.log('close');
 };
 
@@ -86,7 +76,7 @@ const findMenuById = (id: any) => {
 
 const removeMenuByIndex = (foodOrderId: string) => {
   // console.log(foodOrderId)
-  // menuBasket.value.splice(index,1)
+  // menuOrder.value.splice(index,1)
   console.log({
     userId: userId.value,
     username: username.value,
@@ -127,7 +117,7 @@ const order = async () => {
     });
   } else {
     socket.emit('handleCreateOrder', {
-      foodOrderList: selectedFoodList.value,
+      additionalFoodOrderList: selectedFoodList.value,
       restaurantId: restaurantId.value,
       tableToken: tableToken.value,
       clientGroupId: clientGroupId.value,
