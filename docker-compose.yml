@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: prod
-    image: ghcr.io/kb-group-enterprise/menuler-frontend:dev
+    image: ghcr.io/kb-group-enterprise/menuler-frontend:dev 
 #define network
 networks:
   default:
