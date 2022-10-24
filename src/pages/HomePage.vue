@@ -7,11 +7,11 @@
     <div class="flex flex-col justify-center items-center">
       <img
         class="w-48 h-48 my-2"
-        src="http://api.qrserver.com/v1/create-qr-code/?data=https://menuler.me/customer/menu/cbe7a49c-147d-4b0f-8ba0-5126f7ad5cb9&size=400x400"
+        src="http://api.qrserver.com/v1/create-qr-code/?data=https://menuler.me/customer/menu/69b20cce-9096-43b6-a598-381365172f36&size=400x400"
       />
       for our demo
       <router-link
-        to="/customer/menu/cbe7a49c-147d-4b0f-8ba0-5126f7ad5cb9"
+        to="/customer/menu/69b20cce-9096-43b6-a598-381365172f36"
         class="text-blue-500 underline"
         >click here</router-link
       >
