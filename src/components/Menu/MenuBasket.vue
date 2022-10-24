@@ -126,12 +126,16 @@ const order = async () => {
       clientGroupId: clientGroupId.value,
     });
   } else {
-    socket.emit('handleCreateOrder', {
-      foodOrderList: selectedFoodList.value,
+    const createPayload =  {
+      foodOrderList: toRaw(selectedFoodList.value),
       restaurantId: restaurantId.value,
       tableToken: tableToken.value,
       clientGroupId: clientGroupId.value,
-    });
+    }
+    console.log({
+      createPayload
+    })
+    socket.emit('handleCreateOrder', createPayload);
   }
 };
 </script>

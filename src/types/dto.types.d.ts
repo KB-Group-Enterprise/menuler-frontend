@@ -40,7 +40,7 @@ export interface MenuItem {
 export interface SelectedFoodItem {
   menuId: string;
   foodName: string;
-  selectedOption: any[];
+  selectedOptions: any[];
   foodOrderId: string;
 }
 

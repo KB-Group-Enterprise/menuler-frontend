@@ -12,6 +12,7 @@ import BusinessDashboardPage from '../pages/business/BusinessDashboardPage.vue';
 import BusinessMenuAddPage from '../pages/business/BusinessMenuAddPage.vue'
 import BusinessMenuEditPage from '../pages/business/BusinessMenuEditPage.vue'
 import BusinessEditRestaurantPage from '../pages/business/BusinessEditRestaurantPage.vue'
+import BuisinessSummaryPage from '@/pages/business/BuisinessSummaryPage.vue';
 
 
 
@@ -44,7 +45,7 @@ const routes = [
 
   { name: 'BusinessEditTableQRPage', path: '/business/table', component: BusinessEditTableQRPage, meta: { auth: true } },
   { name: 'BusinessLoginPage', path: '/business/login', component: BusinessLoginPage },
-
+  { name: 'BusinessSummaryPage', path: '/business/summary', component: BuisinessSummaryPage },
 
 ];
 

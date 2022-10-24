@@ -23,32 +23,33 @@
             <h5 class="text-gray-900 text-center text-xl leading-tight font-medium mb-2">
               {{ restaurant.restaurantName }}
             </h5>
-            <span
-              :class="[restaurant.status === 'OPEN' ? 'text-green-400' : 'text-gray-400']"
-              class="font-bold"
+            <div
+              class="font-bold text-sm space-x-2 justify-center rounded text-center p-1 my-2 flex"
             >
-              {{ restaurant.status === 'OPEN' ? 'เปิด' : 'ปิด' }}
-            </span>
-            <p class="text-gray-700 text-base mb-4">
-              สร้างเมื่อ {{ formatDateLocale(restaurant.registerOn) }}
-            </p>
+              <div :class="[restaurant.status === 'OPEN' ? 'bg-green-400' : 'bg-gray-400']" class="w-5 h-5 rounded-full"></div>  
+              <div>{{ restaurant.status === 'OPEN' ? 'เปิดให้บริการ' : 'ปิดให้บริการ' }}</div>
+            </div>
             <div class="grid grid-cols-2 gap-2">
               <BaseButtomTW @click="router.push('/business/menu')"> จัดการเมนู </BaseButtomTW>
-              <BaseButtomTW @click="router.push('/business/table')"> จัดการโต๊ะ </BaseButtomTW>
-              <button
+              <BaseButtomTW color="secondary" @click="router.push('/business/table')"> จัดการโต๊ะ </BaseButtomTW>
+              <BaseButtomTW
                 @click="router.push('/business/edit')"
-                type="button"
-                class="inline-block px-6 py-2.5 bg-yellow-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-yellow-600 hover:shadow-lg focus:bg-yellow-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-yellow-700 active:shadow-lg transition duration-150 ease-in-out"
+                color="warning"
               >
                 แก้ไขร้าน
-              </button>
-              <button
-                type="button"
-                class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out"
+              </BaseButtomTW>
+              <BaseButtomTW
+                @click="router.push('/business/summary')"
+                color="info"
+                >
+                ดูสรุปผล
+              </BaseButtomTW>
+              <BaseButtomTW
                 @click="logout"
+                color="danger"
                 >
                 ออกจากระบบ
-              </button>
+              </BaseButtomTW>
             </div>
           </div>
           <div v-else class="flex justify-center">
