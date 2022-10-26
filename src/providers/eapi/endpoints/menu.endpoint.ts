@@ -78,6 +78,16 @@ export function getMenuEndpoint(eapi: EazyApi) {
                 data: dto
             },useConfig)
         },
+        updateMenuOption(id: string,dto: any, useConfig: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'put',
+                endpoint: '/option/:id',
+                data: dto,
+                params: {
+                    id: id
+                }
+            }, useConfig);
+        },
         deleteMenuOption(optiondId: string, useConfig?: UseEapiConfig) {
             return eapi.useEazyApi({
                 method: 'delete',

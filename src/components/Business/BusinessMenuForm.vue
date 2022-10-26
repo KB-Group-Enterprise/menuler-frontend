@@ -86,10 +86,14 @@
         <div v-if="menu">
           <div class="font-bold">ตัวเลือกเพิ่มเติม</div>
           <div>
+            <div 
+            hidden               
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            id="option-modal-opener"></div>
             <div
               class="flex justify-center items-center cursor-pointer"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
+              @click="openCreateOption"
             >
               <IconifyIcon icon="carbon:add-alt" class="mx-1"></IconifyIcon>
               เพิ่มตัวเลือก
@@ -101,7 +105,7 @@
               </div>
               <hr class="my-1" />
               <div class="flex justify-between">
-                <span class="text-yellow-500">แก้ไข</span>
+                <span class="text-yellow-500 cursor-pointer" @click="editOption(option)">แก้ไข</span>
                 <span class="text-red-500 cursor-pointer" @click="deleteOption(option)">ลบ</span>
               </div>
             </div>
@@ -130,7 +134,7 @@
               class="text-xl font-medium leading-normal text-gray-800"
               id="exampleModalLabel"
             >
-              เพิ่มตัวเลือก
+              {{ isEditOption ? 'แก้ไขตัวเลือก' : 'เพิ่มตัวเลือก' }}
             </h5>
             <button
               type="button"
@@ -173,7 +177,7 @@
               </Field>
               <ErrorMessage class="text-red-500 text-sm" name="option_price" />
               <div class="w-full flex flex-nowrap justify-end space-x-2 mt-2">
-                <BaseButtomTW type="button" color="danger" data-bs-dismiss="modal">
+                <BaseButtomTW id="dismiss-option-modal" type="button" color="danger" data-bs-dismiss="modal">
                   ยกเลิก
                 </BaseButtomTW>
                 <BaseButtomTW type="submit"> บันทึก </BaseButtomTW>
@@ -208,6 +212,8 @@ const imgFile = ref<any>(null);
 const previewUrl = ref("");
 const category = ref("");
 const options = ref<any[]>([]);
+const isEditOption = ref(false);
+const editOptionId = ref('');
 
 const optionName = ref("");
 const optionPrice = ref("");
@@ -272,6 +278,9 @@ const readURL = (input: any) => {
 const eapi = useEapi();
 
 const submitOption = async () => {
+  if (isEditOption.value) {
+    return await sendEditOption();
+  }
   // console.log('called');
   if (!props.menu) return
   const name = optionName.value;
@@ -286,9 +295,44 @@ const submitOption = async () => {
   }
   await eapi.menu.createMenuOption(dto, { noticeSuccess: true });
   emit("refetch");
+  const element = document.getElementById('option-modal-opener');
+  element?.click();
 }
 
+const editOption = async (option: any) => {
+  isEditOption.value = true;
+  editOptionId.value = option.id;
+  const element = document.getElementById('option-modal-opener');
+  optionName.value = option.name;
+  optionPrice.value = option.price;
+  element?.click();
+}
 
+const openCreateOption = async () => {
+  isEditOption.value = false;
+  optionName.value  = '';
+  optionPrice.value = '';
+  const element = document.getElementById('option-modal-opener');
+  element?.click();
+}
+
+const sendEditOption = async () => {
+  if (!props.menu) return
+  const name = optionName.value;
+  const price = Number(optionPrice.value) || 0;
+  const menuId = props.menu.id;
+  // console.log(menuId, dto);
+  const dto = {
+    description: 'placeholder',
+    name: name,
+    price: price,
+    menuId
+  }
+  await eapi.menu.updateMenuOption(editOptionId.value, dto, { noticeSuccess: true });
+  emit("refetch");
+  const element = document.getElementById('option-modal-opener');
+  element?.click();
+}
 
 const deleteOption = async (option: any) => {
   const result = await Swaler.question(`ที่จะลบตัวเลือก ${option.name}`);
