@@ -1,48 +1,35 @@
 <template>
   <LayoutContainer>
     <BaseLoading v-if="isApiLoading" />
-    <div v-else-if="isSocketLoading" class="bg-gray-100 max-w-2xl w-full h-full min-h-screen">
+    <div
+      v-else-if="isSocketLoading"
+      class="bg-gray-100 max-w-2xl w-full h-full min-h-screen flex flex-col justify-center"
+    >
       <div class="form-group mb-6 mx-4 my-12">
-        <div class="my-2 w-full text-center">Please enter your name</div>
-          <input type="text" 
+        <div class="my-2 w-full text-center">ยันดีต้อนรับสู่</div>
+        <div v-if="restaurantData" class="my-2 w-full text-center text-2xl font-bold">
+          {{ restaurantData.restaurant.restaurantName }}
+        </div>
+        <div
+          v-if="restaurantData && restaurantData.restaurant.restaurantImage[0]"
+          class="w-full flex justify-center"
+        >
+          <img :src="restaurantData.restaurant.restaurantImage[0]" />
+        </div>
+        <!-- <Vue3Lottie :animationData="LoadingLottie" :height="180" :width="180" /> -->
+        <div class="my-2 w-full text-center">กรุนากรอกชื่อ</div>
+        <input
+          type="text"
           v-model="name"
           @keyup.enter="connectTable"
-          class="form-control block
-            w-full
-            px-3
-            py-1.5
-            text-base
-            font-normal
-            text-gray-700
-            bg-white bg-clip-padding
-            border border-solid border-gray-300
-            rounded
-            transition
-            ease-in-out
-            m-0
-            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput7"
-            placeholder="Name">
-            <button type="submit" class="
-            my-4
-          w-full
-          px-6
-          py-2.5
-          bg-blue-600
-          text-white
-          font-medium
-          text-xs
-          leading-tight
-          uppercase
-          rounded
-          shadow-md
-          hover:bg-blue-700 hover:shadow-lg
-          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
-          active:bg-blue-800 active:shadow-lg
-          transition
-          duration-150
-          ease-in-out" @click="connectTable">Send</button>
-        </div>
-        
+          class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          id="exampleInput7"
+          placeholder="Name"
+        />
+        <BaseButtomTW class="w-full my-2" type="submit" @click="connectTable"
+          >สั่งอาหาร</BaseButtomTW
+        >
+      </div>
     </div>
     <BaseLoading v-else-if="isLoading" />
     <div v-else class="bg-gray-100 max-w-2xl w-full h-full min-h-screen">
@@ -55,7 +42,9 @@
       <div
         class="fixed w-full max-w-md transition-all duration-500 mx-auto"
         :class="
-          modalMenuBasket ? ' translate-x-[0%] opacity-100' : ' translate-x-[100%]  opacity-0'
+          modalMenuBasket
+            ? ' translate-x-[0%] opacity-100'
+            : ' translate-x-[100%]  opacity-0'
         "
       >
         <menu-basket :item="item" class="w-full" />
@@ -63,36 +52,52 @@
       <div
         class="fixed w-full max-w-md transition-all duration-500 mx-auto"
         :class="
-          modalMenuOrder ? ' translate-x-[0%] opacity-100' : ' translate-x-[100%]  opacity-0'
+          modalMenuOrder
+            ? ' translate-x-[0%] opacity-100'
+            : ' translate-x-[100%]  opacity-0'
         "
       >
         <menu-order :item="item" class="w-full" />
       </div>
       <div
         class="transition-all fixed w-full max-w-md bottom-0"
-        :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[100%]'"
+        :class="
+          !(modalMenuSelect || modalMenuBasket || modalMenuOrder)
+            ? 'translate-y-[0%]'
+            : 'translate-y-[100%]'
+        "
       >
         <MenuBottombar @click="basketMenu" />
       </div>
-      <div class="transition-all fixed w-full max-w-md bg-white shadow-sm pb-2" :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[-100%]'
-        ">
-        <div class="flex flex-col justify-center">
-      <h1 class="text-2xl font-bold text-main w-full text-center pt-1">MENULER</h1>
-      <p
-        class="text-xs font-bold text-main w-full text-center -mt-1 uppercase tracking-[0.3rem]"
+      <div
+        class="transition-all fixed w-full max-w-md bg-white shadow-sm pb-2"
+        :class="
+          !(modalMenuSelect || modalMenuBasket || modalMenuOrder)
+            ? 'translate-y-[0%]'
+            : 'translate-y-[-100%]'
+        "
       >
-        the smart menu
-      </p>
-      </div>
-      <div class="absolute left-4 top-3" @click="showUsers">
-        <IconifyIcon icon="clarity:users-solid" class="text-3xl" />
-      </div>
-      <div class="absolute right-4 top-3" @click="orderMenu">
-        <IconifyIcon icon="ep:dish-dot" class="text-3xl" />
-        <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
-          <div class="absolute inline-block top-2 -right-1 bottom-auto left-auto translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 py-1 w-5 text-xs leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-600 text-white rounded-full z-10">{{notiTableData.order.foodOrderList.length}}</div>
+        <div class="flex flex-col justify-center">
+          <h1 class="text-2xl font-bold text-main w-full text-center pt-1">MENULER</h1>
+          <p
+            class="text-xs font-bold text-main w-full text-center -mt-1 uppercase tracking-[0.3rem]"
+          >
+            the smart menu
+          </p>
         </div>
-      </div>
+        <div class="absolute left-4 top-3" @click="showUsers">
+          <IconifyIcon icon="clarity:users-solid" class="text-3xl" />
+        </div>
+        <div class="absolute right-4 top-3" @click="orderMenu">
+          <IconifyIcon icon="ep:dish-dot" class="text-3xl" />
+          <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
+            <div
+              class="absolute inline-block top-2 -right-1 bottom-auto left-auto translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 py-1 w-5 text-xs leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-600 text-white rounded-full z-10"
+            >
+              {{ notiTableData.order.foodOrderList.length }}
+            </div>
+          </div>
+        </div>
       </div>
       <div class="mt-16" v-for="(topic, index) in 1" :key="index">
         <!-- <div class="pl-4 text-xl">Topic</div> -->
@@ -122,12 +127,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, readonly, watch, ref } from 'vue';
-import LayoutContainer from '@/components/Layout/LayoutContainer.vue';
-import MenuBottombar from '@/components/Menu/MenuBottombar.vue';
-import MenuBasket from '@/components/Menu/MenuBasket.vue';
-import MenuSelector from '@/components/Menu/MenuSelector.vue';
-import MenuOrder from '@/components/Menu/MenuOrder.vue';
+import { computed, reactive, readonly, watch, ref } from "vue";
+import LayoutContainer from "@/components/Layout/LayoutContainer.vue";
+import MenuBottombar from "@/components/Menu/MenuBottombar.vue";
+import MenuBasket from "@/components/Menu/MenuBasket.vue";
+import MenuSelector from "@/components/Menu/MenuSelector.vue";
+import MenuOrder from "@/components/Menu/MenuOrder.vue";
 import {
   modalMenuSelect,
   modalMenuBasket,
@@ -141,98 +146,108 @@ import {
   menuBasket,
   selectedFoodList,
   userId,
-clientGroupId,
-restaurantId,
-notiTableData
-} from '@/composable/menu-state';
-import { useRoute } from 'vue-router';
-import { useEapi } from '@/providers';
-import { useSocketIO } from '@/composable/socket';
-import { POSITION, useToast } from 'vue-toastification';
-import BaseLoading from '@/components/Base/BaseLoading.vue';
-import router from '@/router';
-import Swal from 'sweetalert2';
+  clientGroupId,
+  restaurantId,
+  notiTableData,
+} from "@/composable/menu-state";
+import { useRoute } from "vue-router";
+import { useEapi } from "@/providers";
+import { useSocketIO } from "@/composable/socket";
+import { POSITION, useToast } from "vue-toastification";
+import BaseLoading from "@/components/Base/BaseLoading.vue";
+import router from "@/router";
+import Swal from "sweetalert2";
+import BaseButtomTW from "@/components/Base/BaseButtomTW.vue";
+import { Vue3Lottie } from "vue3-lottie";
+import LoadingLottie from "@/assets/lottie/loading.json";
+import { getCookie, setCookie } from "@/utils/helper/cookieHelper";
 const { socket } = useSocketIO();
 const toast = useToast();
 
 // const name = prompt('plz enter name');
 
-const name = ref('')
+const name = ref("");
 
 const isApiLoading = ref(true);
 const isSocketLoading = ref(true);
 
 const isLoading = computed(() => {
-  return isApiLoading.value || isSocketLoading.value
-})
+  return isApiLoading.value || isSocketLoading.value;
+});
 
-socket.on('connect', () => {
-  console.log('socket.io connected');
+socket.on("connect", () => {
+  console.log("socket.io connected");
   const tableToken = route.params.token;
 });
 
 const connectTable = () => {
-  username.value = name.value || 'test';
+  username.value = name.value || "test";
+
+  console.log(
+    {
+      username: username.value,
+      tableToken: tableToken.value,
+    },
+    "connected"
+  );
+
+  socket.emit("joinTable", {
+    username: username.value,
+    tableToken: tableToken.value,
+  });
+};
+
+socket.on("joinedTable", (data) => {
+  console.log("joinedTable: ", data);
+  setCookie("username", data.username, 60 * 10);
+  setCookie("userId", data.userId, 60 * 10);
+  // userId.value = data.userId;
+});
+
+socket.on("deselectedFood", (data) => {
+  console.log("deselectedFood", data);
+});
+
+const lastestMassage = ref("");
+
+socket.on("noti-table", (data) => {
+  console.log("noti-table: ", data);
+  menuBasket.value = data.selectedFoodList.map((i: any) => i.menuId);
+  selectedFoodList.value = data.selectedFoodList;
+  clientGroupId.value = data.clientGroupId;
+  notiTableData.value = data;
+
+  const message = data.message;
   console.log({
-        username: username.value,
-        tableToken: tableToken.value,
-  },'connected');
-  
-  socket.emit('joinTable', {
-        username: username.value,
-        tableToken: tableToken.value,
-  })
-}
+    lastestMassage: lastestMassage.value,
+    message: message,
+  });
+  if (data.message && lastestMassage.value !== message) {
+    lastestMassage.value = message;
+    toast(data.message);
+  }
 
-socket.on('joinedTable', (data) => {
-    // console.log('joinedTable: ', data)
-    // userId.value = data.userId;
-})
+  isSocketLoading.value = false;
+  // toast.success(data.message, { position: POSITION.BOTTOM_CENTER });
+});
 
-socket.on('deselectedFood', (data) => {
-    console.log('deselectedFood', data)
-})
-
-const lastestMassage = ref('');
-
-socket.on('noti-table', (data) => {
-    console.log('noti-table: ', data)
-    menuBasket.value = data.selectedFoodList.map((i: any) => i.menuId);
-    selectedFoodList.value = data.selectedFoodList;
-    clientGroupId.value = data.clientGroupId;
-    notiTableData.value = data;
-    
-    const message = data.message
-    console.log({
-      lastestMassage: lastestMassage.value,
-      message: message
-    })
-    if (data.message && lastestMassage.value !== message) {
-      lastestMassage.value = message
-      toast(data.message)
-    }
-
-    isSocketLoading.value = false;
-    // toast.success(data.message, { position: POSITION.BOTTOM_CENTER });
-})
-
-socket.on('selectedFood', (data) => {
-    console.log('food selected', data)
-    // toast.success(data.message, { position: POSITION.BOTTOM_CENTER });
-})
+socket.on("selectedFood", (data) => {
+  console.log("food selected", data);
+  // toast.success(data.message, { position: POSITION.BOTTOM_CENTER });
+});
 
 const leaveTable = () => {
-  socket.emit('leaveTable', {
+  socket.emit("leaveTable", {
     username: username.value,
-    tableToken: tableToken.value
-  })
-}
-
+    tableToken: tableToken.value,
+  });
+};
 
 const route = useRoute();
 
 const eapi = useEapi();
 
+const restaurantData = ref<any>(null);
 const fetchTokenData = async () => {
   const result = await eapi.menu.getRestaurantByToken(tableToken.value);
   if (result.success && result.data) {
@@ -240,6 +255,7 @@ const fetchTokenData = async () => {
     tableId.value = result.data.id;
     restaurantId.value = result.data.restaurantId;
     console.log(restaurantToken.value);
+    restaurantData.value = result.data;
   }
 };
 
@@ -248,16 +264,30 @@ const fetchMenu = async () => {
   if (result.success && result.data) {
     menuList.value = result.data;
   } else {
-    router.push('/');
+    router.push("/");
   }
 };
 
 const fetchData = async () => {
-  tableToken.value = route.params.token as any as string;
+  tableToken.value = (route.params.token as any) as string;
   await fetchTokenData();
   await fetchMenu();
   console.log(menuList.value.menu);
-  isApiLoading.value = false
+  const cookieUsername = getCookie("username");
+    const cookieUserId = getCookie("userId");
+
+    console.log({
+      cookieUsername,
+      cookieUserId,
+    });
+    if (cookieUsername && cookieUserId) {
+      socket.emit("joinTable", {
+        username: cookieUsername,
+        tableToken: tableToken.value,
+        userId: cookieUserId,
+      });
+    }
+  isApiLoading.value = false;
 };
 
 fetchData();
@@ -272,17 +302,17 @@ const basketMenu = (item: any) => {
 };
 
 const orderMenu = (item: any) => {
-  console.log('hello');
-  
+  console.log("hello");
+
   modalMenuOrder.value = true;
 };
 
 const showUsers = () => {
   Swal.fire({
-    title: 'users',
-    text: notiTableData.value.usernameInRoom.map((i: any) => i.username).join(','),
-  })
-}
+    title: "users",
+    text: notiTableData.value.usernameInRoom.map((i: any) => i.username).join(","),
+  });
+};
 
-const item = ref<{ name: string }>({ name: 'kb' });
+const item = ref<{ name: string }>({ name: "kb" });
 </script>

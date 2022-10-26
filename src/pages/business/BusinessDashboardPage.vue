@@ -58,17 +58,41 @@
         </div>
         <div class="w-11/12 flex flex-col items-center mt-4">
           <h1 class="text-center text-xl">รายการสั่งอาหาร</h1>
-          <div v-for="order in orders" :key="order.id" class="w-ful bg-white rounded w-full p-2 my-2 shadow-md">
+          <div v-for="order in orders" :key="order.id" class="w-full bg-white rounded w-full p-2 my-2 shadow-md">
             <div>
               <div class="font-bold" v-if="order.table">โต๊ะ {{ order.table.tableName }}</div>
               <div class="flex justify-between">
                 <span>{{ formatDateLocale(order.createAt) }}</span>
-                <span class="font-bold">{{ order.status }}</span>
+                <span class="font-bold">{{ order.clientState }}</span>
               </div>
-              <div class="w-full text-center mt-2 text-blue-400" @click="order.open = !order.open">{{ !order.open ? 'ดูเพิ่มเติม' : 'ดูน้อยลง' }}</div>
-              <div v-if="order.open" class="w-full flex flex-col">
+              <div class="flex flex-nowrap justify-end space-x-2 my-2">
+                <BaseButtomTW v-show="order.clientState !== 'REJECT'" color="danger" @click="cancelOrder(order)">ยกเลิกออเดอร์</BaseButtomTW>
+                <BaseButtomTW 
+                  v-show="order.clientState === 'PENDING' || order.clientState === 'UPDATE_ORDER'" 
+                  color="success"
+                  @click="confirmOrder(order)"
+                  >ยืนยันออเดอร์</BaseButtomTW>
+              </div>
+              <!-- <div class="w-full text-center mt-2 text-blue-400 cursor-pointer" @click="order.open = !order.open">{{ !order.open ? 'ดูเพิ่มเติม' : 'ดูน้อยลง' }}</div> -->
+              <div v-if="order.open || true" class="w-full flex flex-col">
                 <div v-for="food,index in order.foodOrderList" :key="food.id" class="w-full border-2 rounded p-1 px-2 my-1 fade-in">
-                  <span class="">{{ index + 1 }}. {{ food.foodName }}</span>
+                  <div class="flex justify-between flex-nowrap">
+                    <span class="">{{ index + 1 }}. {{ food.menu.foodName }}</span>
+                    <span class="font-bold">{{ food.status }}</span>
+                  </div>
+                  <hr class="my-2" />
+                  <div v-show="order.clientState !== 'PENDING' && order.clientState !== 'REJECT'" class="flex justify-end space-x-2">
+                    <BaseButtomTW 
+                      v-show="!(food.status === 'COOKING' || food.status === 'SERVED')" 
+                      color="warning" 
+                      @click="updateFoodStatus(order, food.id, 'COOKING')"
+                    > กำลังปรุง </BaseButtomTW>
+                    <BaseButtomTW 
+                      v-show="food.status !== 'SERVED'" 
+                      color="success"
+                      @click="updateFoodStatus(order, food.id, 'SERVED')"
+                    > ส่งแล้ว </BaseButtomTW>
+                  </div>
                 </div>
               </div>
             </div>
@@ -82,7 +106,7 @@
 <script setup lang="ts">
 import BaseLoading from '@/components/Base/BaseLoading.vue';
 import { useEapi } from '@/providers';
-import { RestaurantListItem } from '@/types/dto.types';
+import { RestaurantListItem, UpdateClientOrderDto } from '@/types/dto.types';
 import formatDateLocale from '@/utils/helper/formatDateLocale';
 import { computed, ref } from '@vue/runtime-dom';
 import BaseButtomTW from '@/components/Base/BaseButtomTW.vue';
@@ -93,6 +117,7 @@ import { loadIcon } from '@iconify/vue';
 import BusinessHeader from '@/components/Business/BusinessHeader.vue';
 import { useSocketIOWithAuth } from '@/composable/socket';
 import { useRouter } from 'vue-router';
+import { string } from 'yup';
 const isLoading = ref(false);
 const eapi = useEapi();
 const auth = useAuth();
@@ -132,42 +157,35 @@ const logout = () => {
   router.push('/business/login');
 }
 
-const addResturant = async () => {
-  const { value: formValues } = await Swal.fire({
-    title: 'เพิ่มร้านอาหาร',
-    html:
-      '<div class="flex flex-col">' +
-      '<label>ชื่อร้านอาหาร</label>' +
-      '<input id="swal-input1" class="swal2-input">' +
-      '<label class="mt-2">ที่อยู่ร้านอาหาร</label>' +
-      '<input id="swal-input2" class="swal2-input">' +
-      '</div>',
-    focusConfirm: false,
-    showCancelButton: true,
-    preConfirm: () => {
-      return [
-        (document.getElementById('swal-input1') as any).value,
-        (document.getElementById('swal-input2') as any).value,
-      ];
-    },
-  });
-  if (formValues) {
-    if (!formValues.every((i) => Boolean(i))) {
-      toast.error('กรุณากรอกข้อมูลให้ถูกต้อง', { position: POSITION.BOTTOM_CENTER });
-    }
-    const name = formValues[0];
-    const location = formValues[1];
-    const payload = {
-      restaurantName: name,
-      location: location,
-    };
-    console.log(payload);
-    const result = await eapi.business.addResturant(payload, { noticeSuccess: true });
-    if (result.success) {
-      auth.fetchProfile();
-    }
+const confirmOrder = async (order: any) => {
+  const dto: UpdateClientOrderDto = {
+    orderId: order.id,
+    clientState: 'CONFIRMED'
   }
-};
+  console.log(dto)
+  socket.emit('updateClientOrder', dto);
+}
+
+const cancelOrder = async (order: any) => {
+  const dto: UpdateClientOrderDto = {
+    orderId: order.id,
+    clientState: 'REJECT'
+  }
+  console.log(dto)
+  socket.emit('updateClientOrder', dto);
+}
+
+const updateFoodStatus = async (order: any, foodId: string, status: 'SERVED' | 'COOKING') => {
+  const dto: UpdateClientOrderDto = {
+    orderId: order.id,
+    updateFoodOrderList: [{
+      foodOrderId: foodId,
+      status
+    }]
+  }
+  console.log(dto)
+  socket.emit('updateClientOrder', dto);
+}
 
 fetchResturant();
 // fetchMenu();
