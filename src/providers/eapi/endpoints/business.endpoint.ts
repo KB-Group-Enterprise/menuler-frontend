@@ -52,5 +52,17 @@ export function getBusinessEndpoint(eapi: EazyApi) {
                 data: payload
             }, useConfig);
         },
+        restaurantSummary(startDate?: string, endDate?: string) {
+            return eapi.useEazyApi<any>({
+                method: 'get',
+                endpoint: '/restaurant/get/summary',
+                query: {
+                    params: {
+                        startDate,
+                        endDate
+                    }
+                }
+            })
+        }
     }
 }

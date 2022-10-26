@@ -86,3 +86,23 @@ export interface UpdateClientOrderDto {
     status: string;
   };
 }
+
+export interface BusinessSummaryDtoLeaderBoard {
+  foodName: string;
+  price: number;
+  sales: number;
+  income: number;
+  category: string;
+}
+
+export interface BusinessSummaryDtoTotal {
+  totalMenuCount: number;
+  totalOrderCount: number;
+  totalSales: number;
+}
+
+export interface BusinessSummaryDto {
+  leaderBoard: BusinessSummaryDtoLeaderBoard[];
+  topTen: BusinessSummaryDtoLeaderBoard[];
+  total: BusinessSummaryDtoTotal;
+}

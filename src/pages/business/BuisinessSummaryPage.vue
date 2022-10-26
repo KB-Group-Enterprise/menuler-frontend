@@ -1,24 +1,29 @@
 <template>
   <BaseContainer>
+    <BaseLoading v-if="isLoading"></BaseLoading>
+    <div v-else>
     <BusinessHeader title="Restaurant Summary" />
     <div>
-      <Datepicker v-model="date" range />
+      <div class="flex flex-col space-y-2 mt-2">
+        <Datepicker class="w-full" v-model="date" range />
+        <BaseButtomTW @click="fetchData()">ค้นหา</BaseButtomTW>
+      </div>
       <div class="grid grid-cols-2 gap-2 my-4">
         <div class="block p-5 rounded-lg shadow-lg bg-white w-full">
           <h5 class="text-gray-900 text-lg leading-tight font-medium mb-2">จำนวนออเดอร์</h5>
-          <p class="text-gray-700 text-base">312 ออเดอร์</p>
+          <p class="text-gray-700 text-base">{{ summaryData.total.totalOrderCount }} ออเดอร์</p>
         </div>
         <div class="block p-5 rounded-lg shadow-lg bg-white w-full">
             <h5 class="text-gray-900 text-lg leading-tight font-medium mb-2">เมนูที่สั่ง</h5>
-            <p class="text-gray-700 text-base">689 เมนู</p>
+            <p class="text-gray-700 text-base">{{ summaryData.total.totalMenuCount }} เมนู</p>
          </div>
          <div class="block p-5 rounded-lg shadow-lg bg-white w-full">
             <h5 class="text-gray-900 text-lg leading-tight font-medium mb-2">ยอดขาย</h5>
-            <p class="text-gray-700 text-base">1204 บาท</p>
+            <p class="text-gray-700 text-base">{{ summaryData.total.totalSales }} บาท</p>
          </div>
       </div>
       <div class="bg-white p-4 rounded-lg shadow-lg">
-        <DoughnutChart v-bind="doughnutChartProps" />
+        <BarChart v-bind="barChartProps" />
       </div>
       <div class="w-full bg-inherit rounded-lg mt-4 flex flex-col space-y-2">
         <div class="grid grid-cols-4 w-full p-4 rounded-lg">
@@ -27,13 +32,14 @@
             <div>จำนวน</div>
             <div>ยอดขาย</div>
         </div>
-        <div v-for="(item, index) in Array(10)" :key="index" class="grid grid-cols-4 bg-white w-full p-4 rounded-lg">
+        <div v-for="(item, index) in summaryData.leaderBoard" :key="index" class="grid grid-cols-4 bg-white w-full p-4 rounded-lg">
             <div>{{ index + 1 }}</div>
-            <div>name</div>
-            <div>3</div>
-            <div>300</div>
+            <div>{{ item.foodName }}</div>
+            <div>{{ item.sales }}</div>
+            <div>{{ item.income }}</div>
         </div>
       </div>
+    </div>
     </div>
   </BaseContainer>
 </template>
@@ -41,31 +47,40 @@
 <script setup lang="ts">
 import BaseContainer from '@/components/Base/BaseContainer.vue';
 import BusinessHeader from '@/components/Business/BusinessHeader.vue';
-import { DoughnutChart, useDoughnutChart } from 'vue-chart-3';
+import { BarChart, useBarChart } from 'vue-chart-3';
 import { Chart, ChartData, ChartOptions, registerables } from 'chart.js';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import BaseButtomTW from '@/components/Base/BaseButtomTW.vue';
+import { useEapi } from '@/providers';
+import BaseLoading from '@/components/Base/BaseLoading.vue';
+import { BusinessSummaryDto } from '@/types/dto.types';
+import { Swaler } from '@/utils/helper/swaler';
 Chart.register(...registerables);
 
 const startDate = new Date();
+startDate.setHours(0,0,0,0)
 const endDate = new Date();
 endDate.setHours(23,59,59)
 const date = ref([startDate, endDate]);
 
+
 const dataValues = ref([30, 40, 60, 70, 5]);
 const dataLabels = ref(['Paris', 'Nîmes', 'Toulon', 'Perpignan', 'Autre']);
-const toggleLegend = ref(true);
+const toggleLegend = ref(false);
+const summaryData = ref<BusinessSummaryDto>(null as any);
+const isLoading = ref(true);
 
-const testData = computed<ChartData<'doughnut'>>(() => ({
+const testData = computed<ChartData<'bar'>>(() => ({
   labels: dataLabels.value,
   datasets: [
     {
       data: dataValues.value,
-      backgroundColor: ['#77CEFF', '#0079AF', '#123E6B', '#97B0C4', '#A5C8ED'],
+      backgroundColor: ['#77CEFF'],
     },
   ],
 }));
 
-const options = computed<ChartOptions<'doughnut'>>(() => ({
+const options = computed<ChartOptions<'bar'>>(() => ({
   scales: {
     myScale: {
       type: 'logarithmic',
@@ -78,15 +93,45 @@ const options = computed<ChartOptions<'doughnut'>>(() => ({
     },
     title: {
       display: true,
-      text: 'เมนูที่ออเดอร์',
+      text: 'เมนูที่ออเดอร์ 10 อันดับแรก',
     },
   },
 }));
 
-const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({
+const { barChartProps, barChartRef } = useBarChart({
   chartData: testData,
   options,
 });
+
+const eapi = useEapi();
+const fetchData = async () => {
+  const startDate = date.value[0];
+  const endDate = date.value[1];
+  if (!startDate || !endDate) {
+    Swaler.warn('วันที่ไม่ถูกต้อง');
+    return
+  }
+  const result = await eapi.business.restaurantSummary(startDate.toISOString(), endDate.toISOString());
+  if (result.success && result.data) {
+    summaryData.value = result.data;
+    // console.log(JSON.stringify(result.data))
+
+    const labels: string[] = [];
+    const values: number[] = [];
+
+    summaryData.value.topTen.forEach((item => {
+      labels.push(item.foodName);
+      values.push(item.sales);
+    }))
+
+    dataLabels.value = labels;  
+    dataValues.value = values;
+
+    isLoading.value = false;
+  }
+}
+
+fetchData();
 </script>
 
 <style scoped></style>
