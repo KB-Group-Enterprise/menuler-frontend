@@ -106,3 +106,12 @@ export interface BusinessSummaryDto {
   topTen: BusinessSummaryDtoLeaderBoard[];
   total: BusinessSummaryDtoTotal;
 }
+
+export interface MenuOptionDto {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  menuId: string;
+  foodOrderIds: any[];
+}

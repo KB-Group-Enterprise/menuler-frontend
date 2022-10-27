@@ -4,16 +4,17 @@
   >
     <div class="absolute right-2 text-2xl" @click="close">x</div>
     <div class="w-full" v-if="notiTableData.order">
-      <div class="text-2xl text-center my-4">Order</div>
+      <div class="text-2xl text-center my-4">รายการที่สั่ง</div>
+      <div class="text-center my-4">{{ notiTableData.order.clientState }}</div>
       <div class="px-12">
         <hr />
       </div>
-      <div class="grid grid-cols-4" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
+      <div class="grid grid-cols-8 px-4" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
         <!-- {{ item.menuId }}
         {{ findMenuById(item.menuId).imageUrl }}
         {{findMenuById(item.menuId).price}} -->
-        <div class="w-full h-full">
-          <div class="flex justify-center items-center p-4">
+        <div class="w-full h-full col-span-3">
+          <div class="flex justify-center items-center p-2">
             <div class="w-20 h-20 bg-gray-300 flex justify-center items-center overflow-hidden rounded-md">
               <img
                 :src="item.menu.imageUrl"
@@ -22,18 +23,32 @@
             </div>
           </div>
         </div>
-        <div class="w-full h-full flex justify-center flex-col col-span-2">
-        <div class="text-xs">{{item.id}}</div>
+        <div class="w-full h-full flex justify-center flex-col col-span-5">
+        <div class="text-xs">
+          <div v-for="clientId in item.clientId" :key="clientId">
+            <div v-if="findUserByUserId(clientId)">
+              <span class="font-bold">{{ findUserByUserId(clientId).username }}</span> สั่ง
+            </div>
+          </div>
+        </div>
           <div>{{ item.menu.foodName }}</div>
           <div class="text-xs">{{ item.menu.price }} ฿</div>
         </div>
-        <div class="col-span-3 px-8">
+        <div class="col-span-8 px-8 mb-2" v-if="findOptionsByIdList(item.optionIds).length">
+          <div class="" v-for="(option,index) in findOptionsByIdList(item.optionIds)" :key="option.id">
+            <div class="flex justify-between w-full text-xs">
+              <span>+ {{ option.name }}</span>
+              <span>{{ option.price }} บาท</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-span-8 px-8">
           <hr />
         </div>
       </div>
     </div>
     <div v-else>
-       <div class="text-2xl text-center my-4">No order yet</div>
+       <div class="text-2xl text-center my-4">ไม่พบออเดอร์</div>
     </div>
   </div>
 </template>
@@ -54,6 +69,8 @@ import {
   restaurantId,
   clientGroupId,
   notiTableData,
+findUserByUserId,
+findOptionsByIdList,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';

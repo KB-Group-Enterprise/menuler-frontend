@@ -38,7 +38,7 @@
     </div>
     </div>
     <div v-else>
-       <div class="text-2xl text-center my-4">No order yet</div>
+       <div class="text-2xl text-center my-4">ยังไม่มีออเดอร์</div>
     </div>
   </div>
 </template>
@@ -59,7 +59,7 @@ import {
   restaurantId,
   clientGroupId,
   notiTableData,
-modalCheckout,
+  modalCheckout,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
