@@ -10,48 +10,99 @@
       <div class="px-12">
         <hr />
       </div>
-        <div class="px-4 py-2">
+      <div class="px-4 py-2">
         <div class="flex w-full justify-center mb-2">รายการอาหาร</div>
-        <div class="grid grid-cols-5 px-2 text-xs" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
+        <div
+          class="grid grid-cols-5 px-2 text-xs"
+          v-for="(item, index) in notiTableData.order.foodOrderList.filter((i: any) => i.status != 'CANCEL')"
+          :key="index"
+        >
           <div v-for="clientId in item.clientId" :key="clientId">
-          <span class="text-xs">{{ findUserByUserId(clientId).username }}</span>
+            <span class="text-xs">{{ findUserByUserId(clientId).username }}</span>
           </div>
-        <div class="flex w-full col-span-2">{{item.menu.foodName}}</div>
-        <div class="flex w-full col-span-2 justify-end">{{item.menu.price}} บาท</div>
-        <div></div>
-        <div class="col-span-4 mb-2" v-if="findOptionsByIdList(item.optionIds).length">
-          <div class="" v-for="(option,index) in findOptionsByIdList(item.optionIds)" :key="option.id">
-            <div class="flex justify-between w-full text-xs">
-              <span>+ {{ option.name }}</span>
-              <span>{{ option.price }} บาท</span>
+          <div class="flex w-full col-span-2">{{ item.menu.foodName }}</div>
+          <div class="flex w-full col-span-2 justify-end">{{ item.menu.price }} บาท</div>
+          <div></div>
+          <div class="col-span-4 mb-2" v-if="findOptionsByIdList(item.optionIds).length">
+            <div
+              class=""
+              v-for="(option, index) in findOptionsByIdList(item.optionIds)"
+              :key="option.id"
+            >
+              <div class="flex justify-between w-full text-xs">
+                <span>+ {{ option.name }}</span>
+                <span>{{ option.price }} บาท</span>
+              </div>
             </div>
           </div>
         </div>
-        </div>
         <div class="px-8">
-        <hr class="mt-2 mb-1" />
-      </div>
+          <hr class="mt-2 mb-1" />
+        </div>
+
         <div class="grid grid-cols-2 px-2 text-xs">
-        <div class="flex w-full">Total</div>
-        <div class="flex w-full justify-end font-bold">{{orderedFoodPrice}} <div class="font-normal ml-1">บาท</div></div>
+          <div class="flex w-full">Total</div>
+          <div class="flex w-full justify-end font-bold">
+            {{ orderedFoodPrice }}
+            <div class="font-normal ml-1">บาท</div>
+          </div>
         </div>
-        </div>
-        <div class="fixed bottom-0 w-full">
-        <div class="mt-4 grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main ">
-        <button class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white " :disabled="Boolean(!selectedFoodList.length)" @click="order">
-          หารเท่ากัน
-        </button>
-        <button class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white" :disabled="Boolean(!selectedFoodList.length)" @click="order">
-          จ่ายแยก
-        </button>
-        <button class="w-full bg-blue-400 text-white py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white col-span-2" :disabled="Boolean(!selectedFoodList.length)" @click="order">
-          จ่ายรวม
-        </button>
       </div>
-    </div>
+      <div class="fixed bottom-0 w-full">
+        <div v-show="paymentMode !== 'NONE'" class="bg-white transition fade-in w-full p-4">
+          <div class="flex justify-center">
+            <img class="w-8/12" src="https://thaiartisanfoods.com/wp-content/uploads/2019/02/promptpay-QR.jpg" />
+          </div>
+          <div class="text-center">{{ restaurantInfo.restaurant.restaurantName }}</div>
+          <div class="text-center text-xl">{{ numberWithCommas(orderedFoodPrice) }} บาท</div>
+          <Transition name="component-fade" type="transition">
+          <div v-if="paymentMode === 'DIVIDE' || paymentMode === 'EACH'">
+            <div class="text-center">
+              {{ paymentMode === 'DIVIDE' ? 'หารจ่าย' : 'จ่ายแยก' }} {{ notiTableData.usernameInRoom.length }} คน
+            </div>
+            <div v-for="user in userPayments" :key="user.id" class="flex flex-nowrap items-center space-x-2 p-3 border border-l-0 border-r-0">
+              <div class="w-10 h-10 p-0.5 rounded-full" :class="[ user.price ? 'bg-yellow-400' : 'bg-gray-400']">
+                <img class="rounded-full" src="https://static.vecteezy.com/system/resources/previews/000/964/198/large_2x/fast-food-meal-set-vector.jpg" />
+              </div>
+              <div>
+                <div>
+                <span class="font-bold text-base">{{ user.username }}</span>
+                <span v-if="userId === user.id" class="mx-2 text-sm">(คุณ)</span>
+                </div>
+                <span>{{ numberWithCommas(user.price) }} บาท</span>
+              </div>
+            </div>
+          </div>
+          </Transition>
+        </div>
+        <div
+          class="mt-4 grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main"
+        >
+          <button
+            class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
+            :disabled="notiTableData.usernameInRoom.length <= 1"
+            @click="paymentMode = 'DIVIDE'"
+          >
+            หารเท่ากัน
+          </button>
+          <button
+            class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
+            :disabled="notiTableData.usernameInRoom.length <= 1"
+            @click="paymentMode = 'EACH'"
+          >
+            จ่ายแยก
+          </button>
+          <button
+            @click="paymentMode = 'SUM'"
+            class="w-full bg-blue-400 text-white py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white col-span-2"
+          >
+            {{ notiTableData.usernameInRoom.length > 1 ? 'จ่ายรวม' : 'จ่าย' }}
+          </button>
+        </div>
+      </div>
     </div>
     <div v-else>
-       <div class="text-2xl text-center my-4">ยังไม่มีออเดอร์</div>
+      <div class="text-2xl text-center my-4">ยังไม่มีออเดอร์</div>
     </div>
   </div>
 </template>
@@ -76,75 +127,46 @@ import {
   findUserByUserId,
   orderedFoodPrice,
   findOptionsByIdList,
+restaurantInfo,
+orderedFoodPriceByClientId,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
 import { string } from 'yup';
 import { useToast } from 'vue-toastification';
 import { Swaler } from '@/utils/helper/swaler';
+import numberWithCommas from '@/utils/helper/numberWithCommas';
 const { socket } = useSocketIO();
+
+const paymentMode = ref<'SUM' | 'DIVIDE' | 'EACH' | 'NONE'>('NONE');
 
 const eapi = useEapi();
 const toast = useToast();
 
+const userPayments = ref<{ username: string, price: number, id: string }[]>([]);
+watch(paymentMode, (val) => {
+  if (val === 'DIVIDE') {
+    const each = orderedFoodPrice.value / notiTableData.value.usernameInRoom.length;
+    userPayments.value = notiTableData.value.usernameInRoom.map((i:any) => {
+      return {
+        id: i.id,
+        username: i.username,
+        price: each
+      }
+    })
+  } else if (val === 'EACH') {
+    userPayments.value = notiTableData.value.usernameInRoom.map((i:any) => {
+      return {
+        id: i.id,
+        username: i.username,
+        price: orderedFoodPriceByClientId(i.id)
+      }
+    })
+  }
+})
+
 const close = () => {
   modalCheckout.value = false;
   console.log('close');
-};
-
-const findMenuById = (id: any) => {
-  // console.log(menuList.value.menu);
-  return menuList.value.menu.find((x: any) => x.id === id);
-};
-
-const removeMenuByIndex = (foodOrderId: string) => {
-  // console.log(foodOrderId)
-  // menuOrder.value.splice(index,1)
-  console.log({
-    userId: userId.value,
-    username: username.value,
-    tableToken: tableToken.value,
-    foodOrderId: foodOrderId,
-  });
-  socket.emit('deselectFood', {
-    userId: userId.value,
-    username: username.value,
-    tableToken: tableToken.value,
-    foodOrderId: foodOrderId,
-  });
-};
-
-const order = async () => {
-  // if already ordered this food
-    if (!selectedFoodList.value.length) {
-        toast.warning('กรุณาเลือกรายการอาหารก่อน')
-    }
-
-  if (notiTableData.value.order) {
-    // if (notiTableData.value.order.status === 'NOT_CHECKOUT') {
-    //     Swaler.warn('รออเดอร์ก่อนหน้าเช็คเอ๊าก่อน')
-    // }
-    console.log('socket.handleUpdateOrder',{
-      orderId: notiTableData.value.order.id,
-      additionalFoodOrderList: selectedFoodList.value,
-      restaurantId: restaurantId.value,
-      tableToken: tableToken.value,
-      clientGroupId: clientGroupId.value,
-    })
-    socket.emit('handleUpdateOrder', {
-      orderId: notiTableData.value.order.id,
-      additionalFoodOrderList: selectedFoodList.value,
-      restaurantId: restaurantId.value,
-      tableToken: tableToken.value,
-      clientGroupId: clientGroupId.value,
-    });
-  } else {
-    socket.emit('handleCreateOrder', {
-      additionalFoodOrderList: selectedFoodList.value,
-      restaurantId: restaurantId.value,
-      tableToken: tableToken.value,
-      clientGroupId: clientGroupId.value,
-    });
-  }
 };
 </script>

@@ -18,6 +18,7 @@ export const userId = ref('');
 export const restaurantId = ref('')
 export const clientGroupId = ref('')
 export const notiTableData = ref<Record<string,any>>({});
+export const restaurantInfo = ref<any>({});
 export const optionPools = computed<MenuOptionDto[]>(() => {
     return menuList.value.menu.map((i: any) => i.options).flat(1);
     // return menuList.value;
@@ -67,6 +68,7 @@ export const orderedFoodPrice = computed(() => {
     if (!notiTableData.value.order.foodOrderList) return 0;
     let total = 0;
     notiTableData.value.order.foodOrderList.forEach((foodItem: any) => {
+        if (foodItem.status === 'CANCEL') return;
         const menu = findMenuById(foodItem.menuId);
         if (menu) {
             total += menu.price;
@@ -79,7 +81,30 @@ export const orderedFoodPrice = computed(() => {
         }
     });
     return total;
-})
+});
+
+export const orderedFoodPriceByClientId = (clentId: string) => {
+    if (!notiTableData.value) return 0;
+    if (!notiTableData.value.order) return 0;
+    if (!notiTableData.value.order.foodOrderList) return 0;
+    if (!clentId) return 0;
+    let total = 0;
+    notiTableData.value.order.foodOrderList.filter((i:any) => i.clientId.includes(clentId) ).forEach((foodItem: any) => {
+        if (foodItem.status === 'CANCEL') return;
+        const menu = findMenuById(foodItem.menuId);
+        if (menu) {
+            total += menu.price;
+        }
+        const options: MenuOptionDto[] = findOptionsByIdList(foodItem.optionIds);
+        if (options && options.length) {
+            options.forEach(i => {
+                total += i.price;
+            })
+        }
+    });
+    return total;
+}
+
 
 // export const menuState = reactive<MenuState>({
 //     modalMenuSelect : false,
