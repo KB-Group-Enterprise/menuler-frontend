@@ -1,36 +1,41 @@
 <template>
   <div
-    class="w-full overflow-y-auto h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20"
+    class="w-full h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20 overflow-y-auto pb-20"
   >
     <div class="absolute right-2 text-2xl" @click="close">x</div>
     <div class="w-full" v-if="notiTableData.order">
-      <div class="text-2xl text-center my-4">Order</div>
+      <div class="text-2xl text-center my-4">Checkout</div>
       <div class="px-12">
         <hr />
       </div>
-      <div class="grid grid-cols-4" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
-        <!-- {{ item.menuId }}
-        {{ findMenuById(item.menuId).imageUrl }}
-        {{findMenuById(item.menuId).price}} -->
-        <div class="w-full h-full">
-          <div class="flex justify-center items-center p-4">
-            <div class="w-20 h-20 bg-gray-300 flex justify-center items-center overflow-hidden rounded-md">
-              <img
-                :src="item.menu.imageUrl"
-                class="w-full h-full rounded object-cover"
-              />
-            </div>
-          </div>
+        <div class="px-4 py-2">
+        <div class="flex w-full justify-center mb-2">รายการอาหาร</div>
+        <div class="grid grid-cols-5 px-2 text-xs" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
+        <div class="flex w-full">Name </div>
+        <div class="flex w-full col-span-2">{{item.menu.foodName}}</div>
+        <div class="flex w-full col-span-2 justify-end">{{item.menu.price}} ฿</div>
         </div>
-        <div class="w-full h-full flex justify-center flex-col col-span-2">
-        <div class="text-xs">{{item.id}}</div>
-          <div>{{ item.menu.foodName }}</div>
-          <div class="text-xs">{{ item.menu.price }} ฿</div>
-        </div>
-        <div class="col-span-3 px-8">
-          <hr />
-        </div>
+        <div class="px-8">
+        <hr class="mt-2 mb-1" />
       </div>
+        <div class="grid grid-cols-2 px-2 text-xs">
+        <div class="flex w-full">Total</div>
+        <div class="flex w-full justify-end">price ฿</div>
+        </div>
+        </div>
+        <div class="fixed bottom-0 w-full">
+        <div class="mt-4 grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main ">
+        <button class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white " :disabled="Boolean(!selectedFoodList.length)" @click="order">
+          หารเท่ากัน
+        </button>
+        <button class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white" :disabled="Boolean(!selectedFoodList.length)" @click="order">
+          จ่ายแยก
+        </button>
+        <button class="w-full bg-blue-400 text-white py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white col-span-2" :disabled="Boolean(!selectedFoodList.length)" @click="order">
+          จ่ายรวม
+        </button>
+      </div>
+    </div>
     </div>
     <div v-else>
        <div class="text-2xl text-center my-4">No order yet</div>
@@ -54,6 +59,7 @@ import {
   restaurantId,
   clientGroupId,
   notiTableData,
+modalCheckout,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
@@ -66,7 +72,7 @@ const eapi = useEapi();
 const toast = useToast();
 
 const close = () => {
-  modalMenuOrder.value = false;
+  modalCheckout.value = false;
   console.log('close');
 };
 

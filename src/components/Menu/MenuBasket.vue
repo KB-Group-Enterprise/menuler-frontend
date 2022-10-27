@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full min-h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20"
+    class="w-full overflow-y-auto h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20 pb-4"
   >
     <div class="absolute right-2 text-2xl" @click="close">x</div>
     <div class="w-full">
@@ -8,6 +8,7 @@
       <div class="px-12">
         <hr />
       </div>
+      <div class="รอแก้บัค overflow">
       <div class="grid grid-cols-3" v-for="(item, index) in selectedFoodList" :key="index">
         <!-- {{ item.menuId }}
         {{ findMenuById(item.menuId).imageUrl }}
@@ -38,6 +39,7 @@
           <hr />
         </div>
       </div>
+    </div>
       <div class="px-4 mt-4">
         <button class="w-full bg-gray-50 py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white" :disabled="Boolean(!selectedFoodList.length)" @click="order">
           สั่งอาหาร

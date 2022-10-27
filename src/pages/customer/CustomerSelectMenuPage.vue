@@ -69,10 +69,24 @@
         <menu-order :item="item" class="w-full" />
       </div>
       <div
+        class="fixed w-full max-w-md transition-all duration-500 mx-auto"
+        :class="
+          modalCheckout ? ' translate-x-[0%] opacity-100' : ' translate-x-[100%]  opacity-0'
+        "
+      >
+        <MenuCheckout :item="item" class="w-full" />
+      </div>
+      <div
         class="transition-all fixed w-full max-w-md bottom-0"
-        :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[100%]'"
+        :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%] duration-500' : 'translate-y-[100%] '"
       >
         <MenuBottombar @click="basketMenu" />
+      </div>
+      <div
+        class="transition-all  fixed w-full max-w-md bottom-0"
+        :class="modalMenuOrder && !modalCheckout ? 'translate-y-[0%] duration-500' : 'translate-y-[100%]'"
+      >
+        <MenuCheckoutBottombar @click="checkout" />
       </div>
       <div class="transition-all fixed w-full max-w-md bg-white shadow-sm pb-2" :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[-100%]'
         ">
@@ -128,9 +142,12 @@ import MenuBottombar from '@/components/Menu/MenuBottombar.vue';
 import MenuBasket from '@/components/Menu/MenuBasket.vue';
 import MenuSelector from '@/components/Menu/MenuSelector.vue';
 import MenuOrder from '@/components/Menu/MenuOrder.vue';
+import MenuCheckoutBottombar from '@/components/Menu/MenuCheckoutBottombar.vue';
+import MenuCheckout from '@/components/Menu/MenuCheckout.vue';
 import {
   modalMenuSelect,
   modalMenuBasket,
+  modalCheckout,
   modalMenuOrder,
   menuItem,
   menuList,
@@ -270,6 +287,10 @@ const selectMenu = (item: any) => {
 const basketMenu = (item: any) => {
   modalMenuBasket.value = true;
 };
+
+const checkout = () => {
+  modalCheckout.value = true
+}
 
 const orderMenu = (item: any) => {
   console.log('hello');
