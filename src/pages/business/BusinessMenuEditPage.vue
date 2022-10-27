@@ -5,7 +5,7 @@
       <BusinessHeader></BusinessHeader>
       <div class="w-full">
         <h1 class="text-center">Edit Menu</h1>
-        <BusinessMenuForm :menu="menu" @save="updateMenu" />
+        <BusinessMenuForm :menu="menu" @save="updateMenu" @refetch="fetchData()" />
       </div>
     </div>
   </LayoutContainer>
@@ -31,7 +31,7 @@ if (!id) {
   router.push('/business/menu');
 }
 
-const fetchData = async (id: string) => {
+const fetchData = async () => {
   const result = await eapi.menu.getMenuByMenuId(id);
   if (result.success && result.message) {
     menu.value = result.data.menu;
@@ -41,7 +41,7 @@ const fetchData = async (id: string) => {
   }
 };
 
-fetchData(id);
+fetchData();
 
 const updateMenu = async (payload: any) => {
   const formData = new FormData();

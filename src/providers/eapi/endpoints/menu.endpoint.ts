@@ -70,6 +70,30 @@ export function getMenuEndpoint(eapi: EazyApi) {
                     id: id
                 }
             },useConfig)
+        },
+        createMenuOption(dto: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/option',
+                data: dto
+            },useConfig)
+        },
+        updateMenuOption(id: string,dto: any, useConfig: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'put',
+                endpoint: '/option/:id',
+                data: dto,
+                params: {
+                    id: id
+                }
+            }, useConfig);
+        },
+        deleteMenuOption(optiondId: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'delete',
+                endpoint: '/option/:id',
+                params: { id: optiondId }
+            }, useConfig)
         }
     }
 }
