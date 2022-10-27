@@ -169,7 +169,7 @@ const confirmOrder = async (order: any) => {
 const cancelOrder = async (order: any) => {
   const dto: UpdateClientOrderDto = {
     orderId: order.id,
-    clientState: 'REJECT'
+    status: 'CANCEL',
   }
   console.log(dto)
   socket.emit('updateClientOrder', dto);
