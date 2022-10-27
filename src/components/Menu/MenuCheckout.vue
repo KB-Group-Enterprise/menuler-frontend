@@ -4,7 +4,7 @@
   >
     <div class="absolute right-2 text-2xl" @click="close">x</div>
     <div class="w-full" v-if="notiTableData.order">
-      <div class="text-2xl text-center my-4">Checkout</div>
+      <div class="text-2xl text-center my-4">ชำระเงิน</div>
       <div class="px-12">
         <hr />
       </div>
