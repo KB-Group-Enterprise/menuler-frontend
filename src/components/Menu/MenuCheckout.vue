@@ -47,14 +47,59 @@
             <div class="font-normal ml-1">บาท</div>
           </div>
         </div>
+
+        <div class="accordion" id="accordionExample">
+  <div class="">
+
+  </div>
+</div>
+
       </div>
       <div class="fixed bottom-0 w-full">
-        <div v-show="paymentMode !== 'NONE'" class="bg-white transition fade-in w-full p-4">
-          <div class="flex justify-center">
+        <div :class="paymentMode !== 'NONE' ? 'translate-y-[-100%] duration-500' : 'translate-y-[0%]'" class="fixed bg-white transition fade-in w-full p-2 pt-4 -z-10">
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+      data-bs-parent="#accordionExample">
+      <div class="flex justify-center">
             <img class="w-8/12" src="https://thaiartisanfoods.com/wp-content/uploads/2019/02/promptpay-QR.jpg" />
+          </div>
           </div>
           <div class="text-center">{{ restaurantInfo.restaurant.restaurantName }}</div>
           <div class="text-center text-xl">{{ numberWithCommas(orderedFoodPrice) }} บาท</div>
+          <div class="flex w-full gap-x-2 my-2">
+    <h2 class="mb-0" id="headingTwo">
+      <button class="
+        collapsed
+        relative
+        flex
+        items-center
+        text-base text-main
+        bg-white
+        border-0
+        transition
+        focus:outline-none
+        w-10 h-10 justify-center shadow rounded-md
+      " type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+        aria-controls="collapseTwo">
+      <IconifyIcon icon="mingcute:qrcode-line" class="text-4xl"/>
+      </button>
+    </h2>
+    <h2 class="mb-0 w-full" id="headingTwo">
+      <a class="
+        collapsed
+        relative
+        flex
+        items-center
+        text-base text-main
+        bg-white
+        border-0
+        transition
+        focus:outline-none
+        w-full h-10 justify-center shadow rounded-md
+      " type="button" href="https://kpaymentgateway-services.kasikornbank.com/KPGW-Redirect-Webapi/Appswitch/KMPVWY0000000000ECAFE7979024B3CBAED472A29FCA746PMT" target="_blank">
+      ชำระผ่านธนาคาร
+      </a>
+    </h2>
+  </div>
           <Transition name="component-fade" type="transition">
           <div v-if="paymentMode === 'DIVIDE' || paymentMode === 'EACH'">
             <div class="text-center">
@@ -76,7 +121,7 @@
           </Transition>
         </div>
         <div
-          class="mt-4 grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main"
+          class="grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main"
         >
           <button
             class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
