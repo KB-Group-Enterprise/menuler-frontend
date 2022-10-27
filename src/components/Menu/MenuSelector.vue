@@ -29,13 +29,15 @@
         <div class="w-10 h-10 flex justify-center items-center text-2xl">{{menuCount}}</div>
         <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="menuCount++">+</div>
     </div>
-    <div class="text-center">
-        {{ foodPrice }} บาท
+    <div class="flex flex-nowrap justify-between p-4 pb-0">
+      <span>ราคารวม </span>
+      <span class="text-main"><span class="font-medium">{{ foodPrice }}</span> บาท</span>
     </div>
-    <div class="px-4 mt-4">
+    <div class="px-4 mt-2">
         <div class="w-full bg-gray-50 py-2 rounded-md shadow text-center" @click="addMenu">เพิ่ม</div>
     </div>
     </div>
+    
   </div>
 </template>
 <script lang="ts" setup>
