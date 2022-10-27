@@ -30,12 +30,12 @@
           <div>{{ findMenuById(item.menuId).foodName }}</div>
           <div class="text-xs">{{ findMenuById(item.menuId).price }} ฿</div>
         </div>
-        <div class="text-xl w-full flex justify-end items-center cursor-pointer">
+        <div class="w-full flex justify-end items-center cursor-pointer">
           <div
-            class="w-10 h-10 flex justify-center items-center rounded-full shadow mr-4"
+            class="w-10 h-10 flex justify-center items-center rounded-full text-red-500 mr-8 mt-9"
             @click="removeMenuByIndex(item.foodOrderId)"
           >
-            X
+          ลบ
           </div>
         </div>
         <div class="col-span-3 px-8 mb-2" v-if="findOptionsByIdList(item.selectedOptions).length">
