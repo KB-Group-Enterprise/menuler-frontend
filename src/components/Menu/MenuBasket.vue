@@ -40,7 +40,11 @@
         </div>
       </div>
     </div>
-      <div class="px-4 mt-4">
+      <div class="flex flex-col px-4 mt-4">
+        <div class="flex flex-nowrap justify-between p-4">
+          <span>ราคารวม </span>
+          <span class="text-yellow-500">{{ selectedFoodPrice }} บาท</span>
+        </div>
         <button class="w-full bg-gray-50 py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white" :disabled="Boolean(!selectedFoodList.length)" @click="order">
           สั่งอาหาร
         </button>
@@ -65,6 +69,7 @@ import {
   restaurantId,
   clientGroupId,
   notiTableData,
+selectedFoodPrice,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';

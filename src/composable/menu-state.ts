@@ -1,5 +1,5 @@
 import { MenuItem, MenuState, SelectedFoodItem } from "@/types/dto.types";
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
 export const modalMenuSelect = ref<boolean>(false)
 export const modalMenuBasket = ref<boolean>(false)
@@ -17,7 +17,22 @@ export const username = ref('');
 export const userId = ref('');
 export const restaurantId = ref('')
 export const clientGroupId = ref('')
-export const notiTableData = ref<Record<string,any>>({})
+export const notiTableData = ref<Record<string,any>>({});
+export const findMenuById = (id: any) => {
+    // console.log(menuList.value.menu);
+    return menuList.value.menu.find((x: any) => x.id === id);
+};
+export const selectedFoodPrice = computed(() => {
+    if (!selectedFoodList.value.length) return 0;
+    let total = 0;
+    selectedFoodList.value.forEach(i => {
+        const menu = findMenuById(i.menuId);
+        if (menu) {
+            total += menu.price;
+        }
+    });
+    return total;
+})
 
 // export const menuState = reactive<MenuState>({
 //     modalMenuSelect : false,

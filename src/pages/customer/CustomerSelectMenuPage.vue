@@ -161,8 +161,8 @@
                           <img class="rounded-full" src="https://static.vecteezy.com/system/resources/previews/000/964/198/large_2x/fast-food-meal-set-vector.jpg" />
                         </div>
                         <div>
-                          <span class="font-bold">{{ user.username }}</span>
-                          <!-- <span class="mx-2 text-sm">{{ user.status.toLowerCase() }}</span> -->
+                          <span class="font-bold text-base">{{ user.username }}</span>
+                          <span v-if="userId === user.id" class="mx-2 text-sm">(คุณ)</span>
                         </div>
                       </div>
                     </div>
@@ -275,6 +275,8 @@ socket.on('joinedTable', (data) => {
   console.log('joinedTable: ', data);
   setCookie('username', data.username, 60 * 10);
   setCookie('userId', data.userId, 60 * 10);
+  username.value = data.username;
+  userId.value = data.userId;
   // userId.value = data.userId;
 });
 
@@ -355,6 +357,8 @@ const fetchData = async () => {
     cookieUserId,
   });
   if (cookieUsername && cookieUserId) {
+    username.value = cookieUsername;
+    userId.value = cookieUserId;
     socket.emit('joinTable', {
       username: cookieUsername,
       tableToken: tableToken.value,
