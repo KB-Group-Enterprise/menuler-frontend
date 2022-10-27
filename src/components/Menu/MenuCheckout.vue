@@ -10,7 +10,7 @@
       <div class="px-12">
         <hr />
       </div>
-      <div v-if="notiTableData.order.bill || true">
+      <div v-if="notiTableData.order.bill">
         <div class="px-4 py-2">
           <div class="flex w-full justify-center mb-2">รายการอาหาร</div>
           <div
