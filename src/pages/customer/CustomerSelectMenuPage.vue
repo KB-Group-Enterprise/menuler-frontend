@@ -55,9 +55,7 @@
       </div>
       <div
         class="fixed w-full max-w-md transition-all duration-500 mx-auto"
-        :class="
-          modalCheckout ? ' translate-x-[0%] opacity-100' : ' translate-x-[100%]  opacity-0'
-        "
+        :class="modalCheckout ? ' translate-x-[0%] opacity-100' : ' translate-x-[100%]  opacity-0'"
       >
         <MenuCheckout :item="item" class="w-full" />
       </div>
@@ -72,13 +70,21 @@
         <MenuBottombar @click="basketMenu" />
       </div>
       <div
-        class="transition-all  fixed w-full max-w-md bottom-0"
-        :class="modalMenuOrder && !modalCheckout ? 'translate-y-[0%] duration-500' : 'translate-y-[100%]'"
+        class="transition-all fixed w-full max-w-md bottom-0"
+        :class="
+          modalMenuOrder && !modalCheckout ? 'translate-y-[0%] duration-500' : 'translate-y-[100%]'
+        "
       >
         <MenuCheckoutBottombar @click="checkout" />
       </div>
-      <div class="transition-all fixed w-full max-w-md bg-white shadow-sm pb-2" :class="!(modalMenuSelect || modalMenuBasket || modalMenuOrder) ? 'translate-y-[0%]' : 'translate-y-[-100%]'
-        ">
+      <div
+        class="transition-all fixed w-full max-w-md bg-white shadow-sm pb-2"
+        :class="
+          !(modalMenuSelect || modalMenuBasket || modalMenuOrder)
+            ? 'translate-y-[0%]'
+            : 'translate-y-[-100%]'
+        "
+      >
         <div class="flex flex-col justify-center">
           <h1 class="text-2xl font-bold text-main w-full text-center pt-1">MENULER</h1>
           <p
@@ -88,11 +94,12 @@
           </p>
         </div>
         <!-- Button trigger modal -->
-        <div 
+        <div
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          class="absolute left-4 top-3" 
-          @click="showUsers">
+          class="absolute left-4 top-3"
+          @click="showUsers"
+        >
           <IconifyIcon icon="clarity:users-solid" class="text-3xl" />
         </div>
         <div class="absolute right-4 top-3" @click="orderMenu">
@@ -129,59 +136,69 @@
         </div>
       </div>
       <!-- <div class="text-red-500" @click="leaveTable">ออกจากโต๊ะ</div> -->
-              <!-- Modal -->
-              <div
-              class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
-              id="exampleModal"
-              tabindex="-1"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
+      <!-- Modal -->
+      <div
+        class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog relative w-auto pointer-events-none">
+          <div
+            class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current"
+          >
+            <div
+              class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md"
             >
-              <div class="modal-dialog relative w-auto pointer-events-none">
+              <h5 class="text-xl font-medium leading-normal text-gray-800" id="exampleModalLabel">
+                เพื่อนร่วมโต๊ะ
+              </h5>
+              <button
+                type="button"
+                class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body relative p-4">
+              <div>
                 <div
-                  class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current"
+                  v-for="user in users"
+                  :key="user.id"
+                  class="flex flex-nowrap items-center space-x-2 p-3 border border-l-0 border-r-0"
                 >
                   <div
-                    class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md"
+                    class="w-10 h-10 p-0.5 rounded-full"
+                    :class="[user.status === 'ONLINE' ? 'bg-green-400' : 'bg-gray-400']"
                   >
-                    <h5 class="text-xl font-medium leading-normal text-gray-800" id="exampleModalLabel">
-                      เพื่อนร่วมโต๊ะ
-                    </h5>
-                    <button
-                      type="button"
-                      class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
+                    <img
+                      class="rounded-full"
+                      src="https://static.vecteezy.com/system/resources/previews/000/964/198/large_2x/fast-food-meal-set-vector.jpg"
+                    />
                   </div>
-                  <div class="modal-body relative p-4">
-                    <div>
-                      <div v-for="user in users" :key="user.id" class="flex flex-nowrap items-center space-x-2 p-3 border border-l-0 border-r-0">
-                        <div class="w-10 h-10 p-0.5 rounded-full" :class="[ user.status === 'ONLINE' ? 'bg-green-400' : 'bg-gray-400']">
-                          <img class="rounded-full" src="https://static.vecteezy.com/system/resources/previews/000/964/198/large_2x/fast-food-meal-set-vector.jpg" />
-                        </div>
-                        <div>
-                          <span class="font-bold text-base">{{ user.username }}</span>
-                          <span v-if="userId === user.id" class="mx-2 text-sm">(คุณ)</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md"
-                  >
-                    <button
-                      type="button"
-                      class="px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
-                      data-bs-dismiss="modal"
-                    >
-                      ปิด
-                    </button>
+                  <div>
+                    <span class="font-bold text-base">{{ user.username }}</span>
+                    <span v-if="userId === user.id" class="mx-2 text-sm">(คุณ)</span>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- end modal -->
+            <div
+              class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md"
+            >
+              <button
+                type="button"
+                class="px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
+                data-bs-dismiss="modal"
+              >
+                ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end modal -->
     </div>
   </LayoutContainer>
 </template>
@@ -212,7 +229,7 @@ import {
   clientGroupId,
   restaurantId,
   notiTableData,
-restaurantInfo,
+  restaurantInfo,
 } from '@/composable/menu-state';
 import { useRoute } from 'vue-router';
 import { useEapi } from '@/providers';
@@ -245,15 +262,15 @@ socket.on('connect', () => {
 });
 
 const users = computed(() => {
-  if (!notiTableData.value.usernameInRoom) return []
+  if (!notiTableData.value.usernameInRoom) return [];
   const users = notiTableData.value.usernameInRoom.sort((a: any, b: any) => {
     const x = a.status === 'ONLINE';
     const y = b.status === 'ONLINE';
-    return (x === y)? 0 : x? -1 : 1;
+    return x === y ? 0 : x ? -1 : 1;
   });
   // console.log(users.map((i: any) => i.status))
-  return  users
-})
+  return users;
+});
 
 const connectTable = () => {
   username.value = name.value || 'test';
@@ -368,7 +385,7 @@ const fetchData = async () => {
       userId: cookieUserId,
     });
     setTimeout(() => {
-      isCookieExist.value = false
+      isCookieExist.value = false;
     }, 5000);
   }
   isApiLoading.value = false;
@@ -386,8 +403,19 @@ const basketMenu = (item: any) => {
 };
 
 const checkout = () => {
-  modalCheckout.value = true
-}
+  modalCheckout.value = true;
+  console.log('emit billing');
+  if (notiTableData.value.clientState !== 'BILLING') {
+    socket.emit('handleUpdateOrder', {
+      orderId: notiTableData.value.order.id,
+      // additionalFoodOrderList: [],
+      restaurantId: restaurantId.value,
+      tableToken: tableToken.value,
+      clientGroupId: clientGroupId.value,
+      clientState: 'BILLING',
+    });
+  }
+};
 
 const orderMenu = (item: any) => {
   console.log('hello');

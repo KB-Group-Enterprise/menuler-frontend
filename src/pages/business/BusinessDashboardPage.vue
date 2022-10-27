@@ -5,8 +5,8 @@
       <div v-else class="flex flex-col justify-center items-center">
         <BusinessHeader />
         <div class="text-center text-lg my-2">ร้านอาหาร</div>
-        <div class="mx-4 space-y-2">
-          <div v-if="restaurant" class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
+        <div class="w-11/12 space-y-2">
+          <div v-if="restaurant" class="p-6 rounded-lg shadow-lg bg-white w-full">
             <div
               class="border p-2 mb-4 transition hover:border-2 cursor-pointer flex justify-center"
             >
@@ -66,7 +66,12 @@
                 <span class="font-bold">{{ order.clientState }}</span>
               </div>
               <div class="flex flex-nowrap justify-end space-x-2 my-2">
-                <BaseButtomTW v-show="order.clientState !== 'REJECT'" color="danger" @click="cancelOrder(order)">ยกเลิกออเดอร์</BaseButtomTW>
+                <div v-show="order.clientState === 'BILLING' && order.status === 'BILLING'" class="w-full flex-nowrap flex justify-between">
+                  <BaseButtomTW color="danger" @click="updateBillStatus(order,'CANCEL')">ยกเลิกจ่าย</BaseButtomTW>
+                  <BaseButtomTW color="warning" @click="updateBillStatus(order, 'PAID')">จ่ายสำเร็จ</BaseButtomTW>
+                </div>
+                <BaseButtomTW v-show="order.clientState === 'BILLING' && order.status !== 'BILLING'" color="warning" @click="confirmBill(order)">ยืนยันการออกบิล</BaseButtomTW>
+                <BaseButtomTW v-show="order.clientState !== 'REJECT' && order.clientState !== 'BILLING'" color="danger" @click="cancelOrder(order)">ยกเลิกออเดอร์</BaseButtomTW>
                 <BaseButtomTW 
                   v-show="order.clientState === 'PENDING' || order.clientState === 'UPDATE_ORDER'" 
                   color="success"
@@ -82,16 +87,16 @@
                   </div>
                   <hr class="my-2" />
                   <div v-show="order.clientState !== 'PENDING' && order.clientState !== 'REJECT'" class="flex justify-end space-x-2">
-                    <BaseButtomTW 
+                    <!-- <BaseButtomTW 
                       v-show="!(food.status === 'COOKING' || food.status === 'SERVED')" 
                       color="warning" 
                       @click="updateFoodStatus(order, food.id, 'COOKING')"
-                    > กำลังปรุง </BaseButtomTW>
+                    > กำลังปรุง </BaseButtomTW> -->
                     <BaseButtomTW 
                       v-show="food.status !== 'SERVED'" 
                       color="success"
                       @click="updateFoodStatus(order, food.id, 'SERVED')"
-                    > ส่งแล้ว </BaseButtomTW>
+                    > ยืนยันการเซิร์ฟ </BaseButtomTW>
                   </div>
                 </div>
               </div>
@@ -185,6 +190,26 @@ const updateFoodStatus = async (order: any, foodId: string, status: 'SERVED' | '
   }
   console.log(dto)
   socket.emit('updateClientOrder', dto);
+}
+
+const confirmBill = async (order: any) => {
+  const dto: UpdateClientOrderDto = {
+    orderId: order.id,
+    status: 'BILLING'
+  }
+  console.log('confirmBillCreation',dto)
+  socket.emit('updateClientOrder', dto);
+
+}
+
+const updateBillStatus = async (order: any, status: string) => {
+  const dto: UpdateClientOrderDto = {
+    orderId: order.id,
+    status: status,
+  }
+  console.log('updateBillStatus',dto)
+  socket.emit('updateClientOrder', dto);
+
 }
 
 fetchResturant();
