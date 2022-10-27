@@ -212,6 +212,7 @@ import {
   clientGroupId,
   restaurantId,
   notiTableData,
+restaurantInfo,
 } from '@/composable/menu-state';
 import { useRoute } from 'vue-router';
 import { useEapi } from '@/providers';
@@ -332,6 +333,7 @@ const fetchTokenData = async () => {
     restaurantId.value = result.data.restaurantId;
     console.log(restaurantToken.value);
     restaurantData.value = result.data;
+    restaurantInfo.value = result.data;
   }
 };
 
