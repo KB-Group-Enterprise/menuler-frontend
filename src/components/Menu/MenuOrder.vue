@@ -2,7 +2,9 @@
   <div
     class="w-full overflow-y-auto h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20"
   >
-    <div class="absolute right-2 text-2xl" @click="close">x</div>
+  <div class="absolute left-5 top-5 text-2xl" @click="close">
+      <IconifyIcon icon="ep:back" class="mx-1"/>
+    </div>
     <div class="w-full" v-if="notiTableData.order">
       <div class="text-2xl text-center my-4">รายการที่สั่ง</div>
       <div class="text-center my-4">{{ notiTableData.order.clientState }}</div>
@@ -13,9 +15,9 @@
         <!-- {{ item.menuId }}
         {{ findMenuById(item.menuId).imageUrl }}
         {{findMenuById(item.menuId).price}} -->
-        <div class="w-full h-full col-span-3">
+        <div class="w-full h-full col-span-3 relative">
           <div class="flex justify-center items-center p-2">
-            <div class="w-20 h-20 bg-gray-300 flex justify-center items-center overflow-hidden rounded-md">
+            <div class="w-20 h-20 bg-gray-300 flex justify-center items-center overflow-hidden rounded-md relative">
               <img
                 :src="item.menu.imageUrl"
                 class="w-full h-full rounded object-cover"
@@ -23,7 +25,8 @@
             </div>
           </div>
         </div>
-        <div class="w-full h-full flex justify-center flex-col col-span-5">
+        <div class="w-full h-full flex justify-center flex-col col-span-5 relative">
+          <div class="absolute right-2 top-4 py-1 text-xs px-2 rounded-md text-center text-white" :class="getStatus(item.status) == 'กำลังปรุง' ? 'bg-orange-500' : getStatus(item.status) == 'เสิร์ฟแล้ว' ? 'bg-green-500' : 'bg-gray-500'">{{getStatus(item.status)}}</div>
         <div class="text-xs">
           <div v-for="clientId in item.clientId" :key="clientId">
             <div v-if="findUserByUserId(clientId)">
@@ -91,6 +94,15 @@ const findMenuById = (id: any) => {
   // console.log(menuList.value.menu);
   return menuList.value.menu.find((x: any) => x.id === id);
 };
+
+const getStatus = (status : any) => {
+  let statusTH = ''
+  if(status === 'COOKING') statusTH = 'กำลังปรุง'
+  else if(status === 'SERVED') statusTH = 'เสิร์ฟแล้ว'
+  else if(status === 'CANCEL') statusTH = 'ยกเลิก'
+  else if(status === 'PENDING') statusTH = 'กำลังปรุง'
+  return statusTH
+}
 
 const removeMenuByIndex = (foodOrderId: string) => {
   // console.log(foodOrderId)

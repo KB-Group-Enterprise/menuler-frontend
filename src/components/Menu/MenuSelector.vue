@@ -1,6 +1,8 @@
 <template>
   <div class="w-full min-h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20">
-      <div class="absolute right-2 text-2xl" @click="close">x</div>
+    <div class="absolute left-5 top-5 text-3xl" @click="close">
+      <IconifyIcon icon="ep:back" class="mx-1 bg-white rounded-full px-1"/>
+    </div>
       <div class="w-full"> 
     <div class="w-full h-60 bg-gray-50 flex justify-center items-center">
         <img :src="menuItem.imageUrl" class="w-full h-full rounded object-cover" />
