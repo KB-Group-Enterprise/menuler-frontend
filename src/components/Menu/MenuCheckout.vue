@@ -2,7 +2,9 @@
   <div
     class="w-full h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20 overflow-y-auto pb-20"
   >
-    <div class="absolute right-2 text-2xl" @click="close">x</div>
+  <div class="absolute left-5 top-5 text-2xl" @click="close">
+      <IconifyIcon icon="ep:back" class="mx-1"/>
+    </div>
     <div class="w-full" v-if="notiTableData.order">
       <div class="text-2xl text-center my-4">ชำระเงิน</div>
       <div class="px-12">
