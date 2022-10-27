@@ -24,6 +24,7 @@
           </div>
         </div>
         <div class="w-full h-full flex justify-center flex-col">
+          <div class="text-xs">{{ item.username }}</div>
           <div>{{ findMenuById(item.menuId).foodName }}</div>
           <div class="text-xs">{{ findMenuById(item.menuId).price }} ฿</div>
         </div>

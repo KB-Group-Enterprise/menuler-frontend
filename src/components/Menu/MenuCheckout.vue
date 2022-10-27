@@ -11,16 +11,27 @@
         <div class="px-4 py-2">
         <div class="flex w-full justify-center mb-2">รายการอาหาร</div>
         <div class="grid grid-cols-5 px-2 text-xs" v-for="(item, index) in notiTableData.order.foodOrderList" :key="index">
-        <div class="flex w-full">Name </div>
+          <div v-for="clientId in item.clientId" :key="clientId">
+          <span class="text-xs">{{ findUserByUserId(clientId).username }}</span>
+          </div>
         <div class="flex w-full col-span-2">{{item.menu.foodName}}</div>
-        <div class="flex w-full col-span-2 justify-end">{{item.menu.price}} ฿</div>
+        <div class="flex w-full col-span-2 justify-end">{{item.menu.price}} บาท</div>
+        <div></div>
+        <div class="col-span-4 mb-2" v-if="findOptionsByIdList(item.optionIds).length">
+          <div class="" v-for="(option,index) in findOptionsByIdList(item.optionIds)" :key="option.id">
+            <div class="flex justify-between w-full text-xs">
+              <span>+ {{ option.name }}</span>
+              <span>{{ option.price }} บาท</span>
+            </div>
+          </div>
+        </div>
         </div>
         <div class="px-8">
         <hr class="mt-2 mb-1" />
       </div>
         <div class="grid grid-cols-2 px-2 text-xs">
         <div class="flex w-full">Total</div>
-        <div class="flex w-full justify-end">price ฿</div>
+        <div class="flex w-full justify-end font-bold">{{orderedFoodPrice}} <div class="font-normal ml-1">บาท</div></div>
         </div>
         </div>
         <div class="fixed bottom-0 w-full">
@@ -60,6 +71,9 @@ import {
   clientGroupId,
   notiTableData,
   modalCheckout,
+  findUserByUserId,
+  orderedFoodPrice,
+  findOptionsByIdList,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';

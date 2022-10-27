@@ -42,6 +42,7 @@ export interface SelectedFoodItem {
   foodName: string;
   selectedOptions: any[];
   foodOrderId: string;
+  username : string;
 }
 
 export interface MenuState {

@@ -27,7 +27,7 @@
         <div class="text-xs">
           <div v-for="clientId in item.clientId" :key="clientId">
             <div v-if="findUserByUserId(clientId)">
-              <span class="font-bold">{{ findUserByUserId(clientId).username }}</span> สั่ง
+              <span class="text-xs">{{ findUserByUserId(clientId).username }}</span>
             </div>
           </div>
         </div>
