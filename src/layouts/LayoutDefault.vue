@@ -1,7 +1,7 @@
 <template>
   <div
     class="max-w-screen w-full relative"
-    :class="isModalOpen ? 'h-screen overflow-hidden' : ''"
+    :class="isModalOpen || modalMenuBasket || modalMenuSelect || modalCheckout || modalMenuOrder  ? 'h-screen overflow-hidden' : ''"
   >
     <!-- <LayoutNavbar />
     <LayoutSidebar /> -->
@@ -26,6 +26,10 @@ import { computed, ref, toRaw, watch } from "vue";
 import { useRouter } from "vue-router";
 import scrollToTop from "@/utils/helper/scrollToTop";
 import { useEapi } from "@/providers";
+import {modalMenuSelect,
+  modalMenuBasket,
+  modalCheckout,
+  modalMenuOrder,} from '@/composable/menu-state'; 
 
 const global = useGlobal();
 const isSidebarOpen = computed(() => global.state.isSidebarOpen);
