@@ -1,12 +1,12 @@
 <template>
   <LayoutContainer>
-    <BaseLoading v-if="isApiLoading" />
+    <BaseLoading v-if="isApiLoading || (isSocketLoading && isCookieExist)" />
     <div
       v-else-if="isSocketLoading"
       class="bg-gray-100 max-w-2xl w-full h-full min-h-screen flex flex-col justify-center"
     >
       <div class="form-group mb-6 mx-4 my-12">
-        <div class="my-2 w-full text-center">ยันดีต้อนรับสู่</div>
+        <div class="my-2 w-full text-center">ยินดีต้อนรับสู่</div>
         <div v-if="restaurantData" class="my-2 w-full text-center text-2xl font-bold">
           {{ restaurantData.restaurant.restaurantName }}
         </div>
@@ -273,8 +273,8 @@ const connectTable = () => {
 
 socket.on('joinedTable', (data) => {
   console.log('joinedTable: ', data);
-  setCookie('username', data.username, 60 * 10);
-  setCookie('userId', data.userId, 60 * 10);
+  setCookie('username', data.username, 60 * 60 * 24);
+  setCookie('userId', data.userId, 60 * 60 * 24);
   username.value = data.username;
   userId.value = data.userId;
   // userId.value = data.userId;
@@ -343,7 +343,7 @@ const fetchMenu = async () => {
     router.push('/');
   }
 };
-
+const isCookieExist = ref(false);
 const fetchData = async () => {
   tableToken.value = route.params.token as any as string;
   await fetchTokenData();
@@ -357,6 +357,7 @@ const fetchData = async () => {
     cookieUserId,
   });
   if (cookieUsername && cookieUserId) {
+    isCookieExist.value = true;
     username.value = cookieUsername;
     userId.value = cookieUserId;
     socket.emit('joinTable', {
@@ -364,6 +365,9 @@ const fetchData = async () => {
       tableToken: tableToken.value,
       userId: cookieUserId,
     });
+    setTimeout(() => {
+      isCookieExist.value = false
+    }, 5000);
   }
   isApiLoading.value = false;
 };

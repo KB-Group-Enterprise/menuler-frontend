@@ -88,6 +88,8 @@ const addMenu = () => {
                 menuId: menuItem.value.id,
                 foodName: menuItem.value.foodName,
                 selectedOptions: toRaw(selectedOptions.value),
+                username: item.username,
+                userId: item.userId,
             })
     }
     console.log('selectFood', item);

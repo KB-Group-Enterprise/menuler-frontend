@@ -4,7 +4,7 @@
   >
     <div class="absolute right-2 text-2xl" @click="close">x</div>
     <div class="w-full">
-      <div class="text-2xl text-center my-4">Basket</div>
+      <div class="text-2xl text-center my-4">ตระกร้าสินค้า</div>
       <div class="px-12">
         <hr />
       </div>
@@ -35,9 +35,20 @@
             X
           </div>
         </div>
+        <div class="col-span-3 px-8 mb-2" v-if="findOptionsByIdList(item.selectedOptions).length">
+          <div class="" v-for="(option,index) in findOptionsByIdList(item.selectedOptions)" :key="option.id">
+            <div class="flex justify-between w-full text-xs">
+              <span>+ {{ option.name }}</span>
+              <span>{{ option.price }} บาท</span>
+            </div>
+          </div>
+        </div>
         <div class="col-span-3 px-8">
           <hr />
         </div>
+      </div>
+      <div class="text-center text-gray-400 my-5" v-show="!selectedFoodList.length">
+        ไม่มีรายการที่เลือก
       </div>
     </div>
       <div class="flex flex-col px-4 mt-4">
@@ -70,6 +81,8 @@ import {
   clientGroupId,
   notiTableData,
 selectedFoodPrice,
+findOptionsByIdList,
+optionPools,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
