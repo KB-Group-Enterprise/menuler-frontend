@@ -104,7 +104,7 @@
             <div
               class="absolute inline-block top-2 -right-1 bottom-auto left-auto translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 py-1 w-5 text-xs leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-400 text-white rounded-full z-10"
             >
-              {{ notiTableData.order.foodOrderList.length }}
+              {{ users.length }}
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@
             <div
               class="absolute inline-block top-2 -right-1 bottom-auto left-auto translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 py-1 w-5 text-xs leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-600 text-white rounded-full z-10"
             >
-              {{ users.length }}
+              {{ notiTableData.order.foodOrderList.length }}
             </div>
           </div>
         </div>
