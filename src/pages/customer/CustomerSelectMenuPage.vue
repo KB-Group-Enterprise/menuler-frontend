@@ -97,8 +97,9 @@
         <div
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          class="absolute left-4 top-3" 
-          @click="showUsers">
+          class="absolute left-4 top-3"
+          @click="showUsers"
+        >
           <IconifyIcon icon="ci:group" class="text-3xl" />
           <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
             <div
@@ -248,6 +249,7 @@ import BaseButtomTW from '@/components/Base/BaseButtomTW.vue';
 import { Vue3Lottie } from 'vue3-lottie';
 import LoadingLottie from '@/assets/lottie/loading.json';
 import { getCookie, setCookie } from '@/utils/helper/cookieHelper';
+import { Swaler } from '@/utils/helper/swaler';
 const { socket } = useSocketIO();
 const toast = useToast();
 
@@ -310,12 +312,28 @@ socket.on('deselectedFood', (data) => {
 
 const lastestMassage = ref('');
 
+const isPaidAlreadyToasted = ref(false);
+
 socket.on('noti-table', (data) => {
   console.log('noti-table: ', data);
   menuBasket.value = data.selectedFoodList.map((i: any) => i.menuId);
   selectedFoodList.value = data.selectedFoodList;
   clientGroupId.value = data.clientGroupId;
   notiTableData.value = data;
+
+  if (
+    notiTableData.value &&
+    notiTableData.value.order &&
+    notiTableData.value.order.status === 'PAID'
+  ) {
+    if (!isPaidAlreadyToasted.value) {
+      Swaler.success('จ่ายเงินสำเร็จ', {
+        timerProgressBar: false,
+        timer: 1000,
+      });
+      isPaidAlreadyToasted.value = true;
+    }
+  }
 
   const message = data.message;
   console.log({
