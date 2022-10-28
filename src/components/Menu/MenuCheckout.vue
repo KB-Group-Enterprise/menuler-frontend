@@ -22,14 +22,9 @@
               <span class="text-xs">{{ findUserByUserId(clientId).username }}</span>
             </div>
             <div class="flex w-full col-span-2">{{ item.menu.foodName }}</div>
-            <div class="flex w-full col-span-2 justify-end">
-              {{ item.menu.price }} บาท
-            </div>
+            <div class="flex w-full col-span-2 justify-end">{{ item.menu.price }} บาท</div>
             <div></div>
-            <div
-              class="col-span-4 mb-2"
-              v-if="findOptionsByIdList(item.optionIds).length"
-            >
+            <div class="col-span-4 mb-2" v-if="findOptionsByIdList(item.optionIds).length">
               <div
                 class=""
                 v-for="(option, index) in findOptionsByIdList(item.optionIds)"
@@ -53,32 +48,67 @@
               <div class="font-normal ml-1">บาท</div>
             </div>
           </div>
+
+          <div class="accordion" id="accordionExample">
+            <div class=""></div>
+          </div>
         </div>
         <div class="fixed bottom-0 w-full">
           <div
-            v-show="paymentMode !== 'NONE'"
-            class="bg-white transition fade-in w-full p-4"
+            :class="
+              paymentMode !== 'NONE' ? 'translate-y-[-100%] duration-500' : 'translate-y-[0%]'
+            "
+            class="fixed bg-white transition fade-in w-full p-2 pt-4 -z-10"
           >
-            <div class="flex justify-center">
-              <img
-                class="w-8/12"
-                src="https://thaiartisanfoods.com/wp-content/uploads/2019/02/promptpay-QR.jpg"
-              />
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="flex justify-center">
+                <img
+                  class="w-8/12"
+                  src="https://thaiartisanfoods.com/wp-content/uploads/2019/02/promptpay-QR.jpg"
+                />
+              </div>
             </div>
             <div class="text-center">{{ restaurantInfo.restaurant.restaurantName }}</div>
-            <div class="text-center text-xl">
-              {{ numberWithCommas(orderedFoodPrice) }} บาท
-            </div>
+            <div class="text-center text-xl">{{ numberWithCommas(orderedFoodPrice) }} บาท</div>
             <div class="text-center text-xs text-gray-400">
-              หมายเลขออเดอร์ <br/> {{ notiTableData.order.id }}
+              หมายเลขออเดอร์ <br />
+              {{ notiTableData.order.id }}
+            </div>
+            <div class="flex w-full gap-x-2 my-2">
+              <h2 class="mb-0" id="headingTwo">
+                <button
+                  class="collapsed relative flex items-center text-base text-main bg-white border-0 transition focus:outline-none w-10 h-10 justify-center shadow rounded-md"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  <IconifyIcon icon="mingcute:qrcode-line" class="text-4xl" />
+                </button>
+              </h2>
+              <h2 class="mb-0 w-full" id="headingTwo">
+                <a
+                  class="collapsed relative flex items-center text-base text-main bg-white border-0 transition focus:outline-none w-full h-10 justify-center shadow rounded-md"
+                  type="button"
+                  href="https://kpaymentgateway-services.kasikornbank.com/KPGW-Redirect-Webapi/Appswitch/KMPVWY0000000000ECAFE7979024B3CBAED472A29FCA746PMT"
+                  target="_blank"
+                >
+                  ชำระผ่านธนาคาร
+                </a>
+              </h2>
             </div>
             <Transition name="component-fade" type="transition">
               <div v-if="paymentMode === 'DIVIDE' || paymentMode === 'EACH'">
                 <div class="text-center">
-                  {{ paymentMode === "DIVIDE" ? "หารจ่าย" : "จ่ายแยก" }}
+                  {{ paymentMode === 'DIVIDE' ? 'หารจ่าย' : 'จ่ายแยก' }}
                   {{ notiTableData.usernameInRoom.length }} คน
                 </div>
-                <div class="w-full max-h-80 overflow-y-auto">
                 <div
                   v-for="user in userPayments"
                   :key="user.id"
@@ -101,12 +131,11 @@
                     <span>{{ numberWithCommas(user.price) }} บาท</span>
                   </div>
                 </div>
-                </div>
               </div>
             </Transition>
           </div>
           <div
-            class="mt-4 grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main"
+            class="grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main"
           >
             <button
               class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
@@ -126,7 +155,7 @@
               @click="paymentMode = 'SUM'"
               class="w-full bg-blue-400 text-white py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white col-span-2"
             >
-              {{ notiTableData.usernameInRoom.length > 1 ? "จ่ายรวม" : "จ่าย" }}
+              {{ notiTableData.usernameInRoom.length > 1 ? 'จ่ายรวม' : 'จ่าย' }}
             </button>
           </div>
         </div>
@@ -141,22 +170,13 @@
       </div>
     </div>
     <div v-else>
-      <div class="text-2xl text-center my-4">ยังไม่สามารถชำระเงิน</div>
+      <div class="text-2xl text-center my-4">ยังไม่มีออเดอร์</div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import LoadingLottie from '@/assets/lottie/cash.json';
-import {
-  computed,
-  reactive,
-  readonly,
-  watch,
-  ref,
-  defineProps,
-  onMounted,
-  toRaw,
-} from "vue";
+import { computed, reactive, readonly, watch, ref, defineProps, onMounted, toRaw } from 'vue';
 import {
   modalMenuOrder,
   menuItem,
@@ -178,23 +198,23 @@ import {
   findOptionsByIdList,
   restaurantInfo,
   orderedFoodPriceByClientId,
-} from "@/composable/menu-state";
-import { useEapi } from "@/providers";
-import { useSocketIO } from "@/composable/socket";
-import { string } from "yup";
-import { useToast } from "vue-toastification";
-import { Swaler } from "@/utils/helper/swaler";
-import numberWithCommas from "@/utils/helper/numberWithCommas";
+} from '@/composable/menu-state';
+import { useEapi } from '@/providers';
+import { useSocketIO } from '@/composable/socket';
+import { string } from 'yup';
+import { useToast } from 'vue-toastification';
+import { Swaler } from '@/utils/helper/swaler';
+import numberWithCommas from '@/utils/helper/numberWithCommas';
 const { socket } = useSocketIO();
 
-const paymentMode = ref<"SUM" | "DIVIDE" | "EACH" | "NONE">("NONE");
+const paymentMode = ref<'SUM' | 'DIVIDE' | 'EACH' | 'NONE'>('NONE');
 
 const eapi = useEapi();
 const toast = useToast();
 
 const userPayments = ref<{ username: string; price: number; id: string }[]>([]);
 watch(paymentMode, (val) => {
-  if (val === "DIVIDE") {
+  if (val === 'DIVIDE') {
     const each = orderedFoodPrice.value / notiTableData.value.usernameInRoom.length;
     userPayments.value = notiTableData.value.usernameInRoom.map((i: any) => {
       return {
@@ -203,7 +223,7 @@ watch(paymentMode, (val) => {
         price: each,
       };
     });
-  } else if (val === "EACH") {
+  } else if (val === 'EACH') {
     userPayments.value = notiTableData.value.usernameInRoom.map((i: any) => {
       return {
         id: i.id,
@@ -216,6 +236,6 @@ watch(paymentMode, (val) => {
 
 const close = () => {
   modalCheckout.value = false;
-  console.log("close");
+  console.log('close');
 };
 </script>
