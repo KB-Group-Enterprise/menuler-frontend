@@ -205,7 +205,10 @@ const confirmBill = async (order: any) => {
 const updateBillStatus = async (order: any, status: string) => {
   const dto: UpdateClientOrderDto = {
     orderId: order.id,
-    status: status,
+    bill: {
+      billId: order.bill.id,
+      status: status
+    },
   }
   console.log('updateBillStatus',dto)
   socket.emit('updateClientOrder', dto);
