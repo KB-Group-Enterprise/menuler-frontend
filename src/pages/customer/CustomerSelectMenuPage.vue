@@ -97,9 +97,8 @@
         <div
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          class="absolute left-4 top-3"
-          @click="showUsers"
-        >
+          class="absolute left-4 top-3" 
+          @click="showUsers">
           <IconifyIcon icon="ci:group" class="text-3xl" />
           <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
             <div
@@ -159,7 +158,7 @@
               class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md"
             >
               <h5 class="text-xl font-medium leading-normal text-gray-800" id="exampleModalLabel">
-                เพื่อนร่วมโต๊ะ
+                เพื่อนร่วมโต๊ะ ({{ table.tableName }})
               </h5>
               <button
                 type="button"
@@ -237,6 +236,7 @@ import {
   restaurantId,
   notiTableData,
   restaurantInfo,
+  table,
 } from '@/composable/menu-state';
 import { useRoute } from 'vue-router';
 import { useEapi } from '@/providers';
@@ -321,17 +321,13 @@ socket.on('noti-table', (data) => {
   clientGroupId.value = data.clientGroupId;
   notiTableData.value = data;
 
-  if (
-    notiTableData.value &&
-    notiTableData.value.order &&
-    notiTableData.value.order.status === 'PAID'
-  ) {
+  if (notiTableData.value && notiTableData.value.order && notiTableData.value.order.status === 'PAID') {
     if (!isPaidAlreadyToasted.value) {
       Swaler.success('จ่ายเงินสำเร็จ', {
-        timerProgressBar: false,
-        timer: 1000,
-      });
-      isPaidAlreadyToasted.value = true;
+      timerProgressBar: false,
+      timer: 1000
+    })
+    isPaidAlreadyToasted.value = true;
     }
   }
 
@@ -375,6 +371,7 @@ const fetchTokenData = async () => {
     console.log(restaurantToken.value);
     restaurantData.value = result.data;
     restaurantInfo.value = result.data;
+    table.value = result.data;
   }
 };
 

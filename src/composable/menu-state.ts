@@ -19,7 +19,9 @@ export const restaurantId = ref('')
 export const clientGroupId = ref('')
 export const notiTableData = ref<Record<string,any>>({});
 export const restaurantInfo = ref<any>({});
+export const table = ref<any>(null);
 export const optionPools = computed<MenuOptionDto[]>(() => {
+    if (!menuList.value.menu) { return [] }
     return menuList.value.menu.map((i: any) => i.options).flat(1);
     // return menuList.value;
 })
@@ -32,6 +34,8 @@ export const findUserByUserId = (userId: string) => {
     }
 }
 export const findOptionsByIdList = (optionIds: string[]) => {
+    if (!optionIds) return [];
+    if (!Array.isArray(optionIds)) return [];
     const list: MenuOptionDto[] = [];
     optionIds.forEach(optionId => {
         const option = optionPools.value.find(i => i.id === optionId);

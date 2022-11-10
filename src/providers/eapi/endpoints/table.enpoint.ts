@@ -40,5 +40,14 @@ export function getTableEndpoint(eapi: EazyApi) {
                 },
             }, useConfig)
         },
+        clearTableByTableToken(tableToken: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/client/clear/table/:tableToken',
+                params: {
+                    tableToken
+                }
+            }, useConfig)
+        }
     }
 }

@@ -16,6 +16,7 @@
           <img class="w-full" :src="table.qrcodeImageUrl" />
         </div>
         <div class="text-center font-bold text-2xl mt-2">{{ table.tableName }}</div>
+        <div class="text-xs text-center">{{ table.tableToken }}</div>
         <div class="flex justify-center my-2">
           <div class="form-check form-switch">
             <input
@@ -31,17 +32,18 @@
         <div class="text-center" :class="[table.isActivate ? 'text-green-500' : 'text-red-500']">
           {{ table.isActivate ? 'เปิดใช้งาน' : 'ปิดใช่งาน' }}
         </div>
-        <div class="flex justify-center space-x-10 mt-2">
-          <IconifyIcon
+        <div class="flex flex-col items-center mt-2">
+          <div
             icon="fluent:delete-dismiss-24-filled"
-            class="mx-1 text-red-600 text-3xl"
+            class="mx-1 text-red-600"
             @click="deleteTable(table)"
-          ></IconifyIcon>
+          >ลบ</div>
           <a :href="table.qrcodeImageUrl" :download="`${table.tableName}.png`">
-            <IconifyIcon icon="eva:download-fill" class="mx-1 text-3xl"></IconifyIcon>
+            <div icon="eva:download-fill" class="mx-1">ดาวน์โหลด</div>
           </a>
-          <IconifyIcon icon="charm:refresh" class="mx-1 text-3xl" @click="refreshTable(table)"></IconifyIcon>
-          <IconifyIcon icon="bxs:edit" class="mx-1 text-3xl" @click="editTableName(table)"></IconifyIcon>
+          <div icon="charm:refresh" class="mx-1" @click="clearTable(table)">เคลียร์โต๊ะ</div>
+          <div icon="charm:refresh" class="mx-1" @click="refreshTable(table)">รีเฟรช</div>
+          <div icon="bxs:edit" class="mx-1" @click="editTableName(table)">แก้ไข</div>
         </div>
       </div>
     </div>
@@ -156,6 +158,16 @@ const deleteTable = async (table: any) => {
   const ans = await Swaler.question(`ที่จะลบโต๊ะ ${table.tableName}`)
   if (!ans.isConfirmed) return;
   const result = await eapi.table.deleteTableById(table.id, { noticeSuccess: true });
+  if (result.success) {
+    fetchData();
+  }
+}
+
+const clearTable = async (table: any) => {
+  const token = table.tableToken;
+  const ans = await Swaler.question(`ที่จะเคลียโต๊ะ ${table.tableName}`);
+  if (!ans.isConfirmed) return;
+  const result = await eapi.table.clearTableByTableToken(token, { noticeSuccess: true });
   if (result.success) {
     fetchData();
   }

@@ -94,7 +94,7 @@ const addMenu = () => {
         item.selectedFood.push({
                 menuId: menuItem.value.id,
                 foodName: menuItem.value.foodName,
-                selectedOptions: toRaw(selectedOptions.value),
+                selectedOptions: [...selectedOptions.value],
                 username: item.username,
                 userId: item.userId,
             })
