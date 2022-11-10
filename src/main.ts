@@ -27,7 +27,8 @@ import i18n from './locale/i18n';
 // config vee-validate
 import { configure, defineRule } from "vee-validate";
 import { localize, setLocale } from '@vee-validate/i18n';
-import { required, between, confirmed, email } from '@vee-validate/rules';
+// eslint-disable-next-line camelcase
+import { required, between, confirmed, email, min_value } from '@vee-validate/rules';
 import th from '@vee-validate/i18n/dist/locale/th.json';
 
 // Date-Picker
@@ -42,6 +43,7 @@ configure({
 setLocale('th');
 defineRule('required', required);
 defineRule('between', between);
+defineRule('min_value', min_value);
 defineRule('confirmed', confirmed);
 defineRule('email', email);
 
