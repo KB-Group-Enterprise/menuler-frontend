@@ -3,14 +3,11 @@
     class="sticky sticky-top w-full flex flex-wrap items-center justify-between py-4 bg-gray-100 text-gray-500 hover:text-gray-700 focus:text-gray-700 shadow-lg navbar navbar-expand-lg navbar-light"
   >
     <div class="container-fluid w-full flex flex-wrap items-center justify-between px-6">
-      <button
-        class="navbar-toggler text-gray-500 border-0 hover:shadow-none hover:no-underline py-2 px-2.5 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none focus:no-underline"
+      <div class="flex items-center">
+        <button
+        class="text-gray-500 border-0 hover:shadow-none hover:no-underline py-2 px-2.5 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none focus:no-underline"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
+        @click="isOpen = !isOpen"
       >
         <svg
           aria-hidden="true"
@@ -28,7 +25,6 @@
           ></path>
         </svg>
       </button>
-      <div class="collapse navbar-collapse flex-grow items-center" id="navbarSupportedContent">
         <div
           class="flex items-center text-gray-900 hover:text-gray-900 focus:text-gray-900 mt-2 lg:mt-0 mr-1 font-bold"
           @click="router.push('/business/dashboard')"
@@ -36,23 +32,23 @@
           MENULER
         </div>
         <!-- Left links -->
-        <ul class="navbar-nav flex flex-col pl-0 list-style-none mr-auto">
-          <li @click="router.push('/business/dashboard')" class="nav-item p-2 cursor-pointer">
+        <ul class="flex pl-0 list-style-none mr-auto lg:flex hidden">
+          <li @click="router.push('/business/dashboard')" class="p-2 cursor-pointer">
             <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
               >Dashboard</span
             >
           </li>
-          <li @click="router.push('/business/menu')" class="nav-item p-2 cursor-pointer">
+          <li @click="router.push('/business/menu')" class="p-2 cursor-pointer">
             <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
               >Menus</span
             >
           </li>
-          <li @click="router.push('/business/table')" class="nav-item p-2 cursor-pointer">
+          <li @click="router.push('/business/table')" class="p-2 cursor-pointer">
             <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
               >Tables</span
             >
           </li>
-          <li @click="router.push('/business/summary')" class="nav-item p-2 cursor-pointer">
+          <li @click="router.push('/business/summary')" class="p-2 cursor-pointer">
             <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
               >Summary</span
             >
@@ -174,15 +170,41 @@
       </div>
       <!-- Right elements -->
     </div>
+    <Transition name="component-fade" type="transition">
+    <ul v-if="isOpen" class="flex flex-col pl-0 list-style-none mr-auto lg:hidden pl-5">
+        <li @click="router.push('/business/dashboard')" class="p-2 cursor-pointer">
+          <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
+            >Dashboard</span
+          >
+        </li>
+        <li @click="router.push('/business/menu')" class="p-2 cursor-pointer">
+          <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
+            >Menus</span
+          >
+        </li>
+        <li @click="router.push('/business/table')" class="p-2 cursor-pointer">
+          <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
+            >Tables</span
+          >
+        </li>
+        <li @click="router.push('/business/summary')" class="p-2 cursor-pointer">
+          <span class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href="#"
+            >Summary</span
+          >
+        </li>
+    </ul>
+    </Transition>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { useAuth } from '@/providers/auth';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const auth = useAuth();
+const isOpen = ref(false);
 const logout = () => {
     auth.logout();
     router.push('/business/login')
