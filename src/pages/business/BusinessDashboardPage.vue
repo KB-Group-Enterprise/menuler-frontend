@@ -142,7 +142,7 @@
               </div>
             </div>
           </div>
-          <div v-else class="w-full">
+          <div v-else class="w-full grid grid-cols-4 gap-8 pt-8">
             <div v-for="(food, index) in foodPools" :key="'menu-' + food.id">
               <div>
                 {{ food.table.tableName }}

@@ -25,9 +25,9 @@
         </div>
     </div>
     <div class="flex flex-row justify-center gap-x-4 mt-4">
-        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="menuCount--">-</div>
+        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="decreaseMenuCount">-</div>
         <div class="w-10 h-10 flex justify-center items-center text-2xl">{{menuCount}}</div>
-        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="menuCount++">+</div>
+        <div class="w-10 h-10 rounded-full shadow bg-white flex justify-center items-center text-2xl" @click="increaseMenuCount">+</div>
     </div>
     <div class="flex flex-nowrap justify-between p-4 pb-0">
       <span>ราคารวม </span>
@@ -65,6 +65,14 @@ const foodPrice = computed(() => {
 
 const isMenuChecked = (optionId: string) => {
     return selectedOptions.value.has(optionId)
+}
+
+const increaseMenuCount = () => {
+    menuCount.value += 1
+}
+
+const decreaseMenuCount = () => {
+    if(menuCount.value > 0)menuCount.value -= 1
 }
 
 const selectOption = (option: any) => {
