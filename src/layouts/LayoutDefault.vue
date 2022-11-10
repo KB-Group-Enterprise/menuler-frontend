@@ -3,7 +3,7 @@
     class="max-w-screen w-full relative"
     :class="isModalOpen || modalMenuBasket || modalMenuSelect || modalCheckout || modalMenuOrder  ? 'h-screen overflow-hidden' : ''"
   >
-    <LayoutNavbar v-if="auth.state.loggedIn" />
+    <LayoutNavbar v-if="auth.state.loggedIn && route.path.includes('business')" />
     
     <!-- <LayoutSidebar />  -->
     <Transition name="component-fade bg-red-500">
@@ -24,7 +24,7 @@ import LayoutSidebar from "@/components/Layout/LayoutSidebar.vue";
 import LayoutGlobalModal from "@/components/Layout/LayoutGlobalModal.vue";
 import { useGlobal } from "@/providers/global";
 import { computed, ref, toRaw, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import scrollToTop from "@/utils/helper/scrollToTop";
 import { useEapi } from "@/providers";
 import {modalMenuSelect,
@@ -38,6 +38,8 @@ const isSidebarOpen = computed(() => global.state.isSidebarOpen);
 const isModalOpen = computed(() => global.state.isModalOpen);
 
 const router = useRouter();
+const route = useRoute();
+// console.log(route)
 const auth = useAuth();
 
 
