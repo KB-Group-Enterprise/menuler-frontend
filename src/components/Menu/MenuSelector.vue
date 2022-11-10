@@ -46,11 +46,11 @@ import { modalMenuSelect,menuItem,menuCount,menuBasket, username, tableToken, us
 import { useSocketIO } from '@/composable/socket';
 const { socket } = useSocketIO();
 
-const selectedOptions = ref<string[]>([]);
+const selectedOptions = ref<Set<string>>(new Set());
 
 const foodPrice = computed(() => {
  let price = menuItem.value.price;
- if (selectedOptions.value.length) {
+ if (selectedOptions.value.size) {
     selectedOptions.value.forEach(optionId => {
         const option = menuItem.value.options.find(i => i.id === optionId);
         if (option) {
@@ -64,17 +64,20 @@ const foodPrice = computed(() => {
 
 
 const isMenuChecked = (optionId: string) => {
-    return Boolean(selectedOptions.value.find(id => id === optionId))
+    return selectedOptions.value.has(optionId)
 }
 
 const selectOption = (option: any) => {
-    console.log(option);
-    selectedOptions.value.push(option.id);
+    if (selectedOptions.value.has(option.id)) {
+        selectedOptions.value.delete(option.id)
+    } else {
+        selectedOptions.value.add(option.id);
+    }
 }
 
 const close = () => {
     modalMenuSelect.value = false;
-    selectedOptions.value = [];
+    selectedOptions.value = new Set();
     // console.log('close');
     menuCount.value = 1
 }
