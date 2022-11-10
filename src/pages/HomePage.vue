@@ -37,7 +37,7 @@ const router = useRouter();
 
 <style>
 #home-bg {
-  background-image: url("./images/homebg2.jpg");
+  background-image: url("https://images.pexels.com/photos/733857/pexels-photo-733857.jpeg");
   background-repeat: no-repeat;
   background-color: #cccccc;
   background-size: cover;
