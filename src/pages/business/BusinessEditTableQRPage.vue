@@ -32,18 +32,18 @@
         <div class="text-center" :class="[table.isActivate ? 'text-green-500' : 'text-red-500']">
           {{ table.isActivate ? 'เปิดใช้งาน' : 'ปิดใช่งาน' }}
         </div>
-        <div class="flex flex-col items-center mt-2">
+        <div class="grid grid-cols-2 gap-1 items-center w-full mt-2 text-sm">
+          <a :href="table.qrcodeImageUrl" :download="`${table.tableName}.png`" class="w-full">
+            <div icon="eva:download-fill" class="w-full rounded-md text-center text-sky-500 border-2 border-sky-500 p-1">ดาวน์โหลด</div>
+          </a>
+          <div icon="charm:refresh" class="w-full rounded-md text-center text-sky-500 border-2 border-sky-500 p-1" @click="clearTable(table)">เคลียร์โต๊ะ</div>
+          <div icon="charm:refresh" class="w-full rounded-md text-center text-sky-500 border-2 border-sky-500 p-1" @click="refreshTable(table)">รีเฟรช</div>
+          <div icon="bxs:edit" class="w-full rounded-md text-center text-sky-500 border-2 border-sky-500 p-1" @click="editTableName(table)">แก้ไข</div>
           <div
             icon="fluent:delete-dismiss-24-filled"
-            class="mx-1 text-red-600"
+            class="text-white col-span-2 text-center w-full bg-red-500 rounded-md"
             @click="deleteTable(table)"
           >ลบ</div>
-          <a :href="table.qrcodeImageUrl" :download="`${table.tableName}.png`">
-            <div icon="eva:download-fill" class="mx-1">ดาวน์โหลด</div>
-          </a>
-          <div icon="charm:refresh" class="mx-1" @click="clearTable(table)">เคลียร์โต๊ะ</div>
-          <div icon="charm:refresh" class="mx-1" @click="refreshTable(table)">รีเฟรช</div>
-          <div icon="bxs:edit" class="mx-1" @click="editTableName(table)">แก้ไข</div>
         </div>
       </div>
     </div>
