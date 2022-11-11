@@ -54,7 +54,7 @@
         ไม่มีรายการที่เลือก
       </div>
     </div>
-      <div class="flex flex-col px-4 mt-4">
+      <div class="flex flex-col px-4 mt-4 pb-24 lg:pb-0">
         <div class="flex flex-nowrap justify-between p-4">
           <span>ราคารวม </span>
           <span class="text-yellow-500">{{ selectedFoodPrice }} บาท</span>
