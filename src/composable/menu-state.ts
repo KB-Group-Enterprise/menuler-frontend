@@ -20,6 +20,7 @@ export const clientGroupId = ref('')
 export const notiTableData = ref<Record<string,any>>({});
 export const restaurantInfo = ref<any>({});
 export const table = ref<any>(null);
+export const viewQr = ref(false);
 export const optionPools = computed<MenuOptionDto[]>(() => {
     if (!menuList.value.menu) { return [] }
     return menuList.value.menu.map((i: any) => i.options).flat(1);

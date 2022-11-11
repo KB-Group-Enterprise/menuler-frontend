@@ -5,7 +5,7 @@
     <div class="absolute left-5 top-5 text-2xl" @click="close">
       <IconifyIcon icon="ep:back" class="mx-1" />
     </div>
-    <div class="w-full" v-if="notiTableData.order">
+    <div class="w-full" v-if="notiTableData.order && (notiTableData.order.clientState === 'CONFIRMED' || notiTableData.order.clientState === 'BILLING')">
       <div class="text-2xl text-center my-4">ชำระเงิน</div>
       <div class="px-12">
         <hr />
@@ -61,17 +61,15 @@
             class="fixed bg-white transition fade-in w-full p-2 pt-4 -z-10"
           >
             <div
-              id="collapseTwo"
-              class="accordion-collapse collapse"
-              aria-labelledby="headingTwo"
-              data-bs-parent="#accordionExample"
             >
-              <div class="flex justify-center">
+            <Transition name="component-fade" mode="out-in">
+              <div v-if="viewQr" class="flex justify-center">
                 <img
                   class="w-8/12"
                   src="https://thaiartisanfoods.com/wp-content/uploads/2019/02/promptpay-QR.jpg"
                 />
               </div>
+            </Transition>
             </div>
             <div class="text-center">{{ restaurantInfo.restaurant.restaurantName }}</div>
             <div class="text-center text-xl">{{ numberWithCommas(orderedFoodPrice) }} บาท</div>
@@ -88,6 +86,7 @@
                   data-bs-target="#collapseTwo"
                   aria-expanded="false"
                   aria-controls="collapseTwo"
+                  @click="viewQr = !viewQr"
                 >
                   <IconifyIcon icon="mingcute:qrcode-line" class="text-4xl" />
                 </button>
@@ -104,7 +103,7 @@
               </h2>
             </div>
             <Transition name="component-fade" type="transition">
-              <div v-if="paymentMode === 'DIVIDE' || paymentMode === 'EACH'">
+              <div class="max-h-60 overflow-y-auto" v-if="paymentMode === 'DIVIDE' || paymentMode === 'EACH'">
                 <div class="text-center">
                   {{ paymentMode === 'DIVIDE' ? 'หารจ่าย' : 'จ่ายแยก' }}
                   {{ notiTableData.usernameInRoom.length }} คน
@@ -135,7 +134,7 @@
             </Transition>
           </div>
           <div
-            class="grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main lg:pb-0 pb-24"
+            class="grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main lg:pb-0 pb-48"
           >
             <button
               class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
@@ -198,6 +197,7 @@ import {
   findOptionsByIdList,
   restaurantInfo,
   orderedFoodPriceByClientId,
+  viewQr,
 } from '@/composable/menu-state';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
