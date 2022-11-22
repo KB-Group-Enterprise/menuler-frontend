@@ -2,7 +2,7 @@
   <div
     class="w-full h-screen bg-gray-100 max-w-md mx-auto relative flex flex-col items-center z-20 overflow-y-auto pb-20"
   >
-    <div class="absolute left-5 top-5 text-2xl" @click="close">
+    <div v-if="notiTableData && notiTableData.order && notiTableData.order.status !== 'PAID'" class="absolute left-5 top-5 text-2xl" @click="close">
       <IconifyIcon icon="ep:back" class="mx-1" />
     </div>
     <div class="w-full" v-if="notiTableData.order && (notiTableData.order.clientState === 'CONFIRMED' || notiTableData.order.clientState === 'BILLING')">
@@ -103,9 +103,9 @@
               </h2>
             </div>
             <Transition name="component-fade" type="transition">
-              <div class="max-h-60 overflow-y-auto" v-if="paymentMode === 'DIVIDE' || paymentMode === 'EACH'">
+              <div class="max-h-60 overflow-y-auto" v-if="paymentMode === 'DIVINE' || paymentMode === 'EACH'">
                 <div class="text-center">
-                  {{ paymentMode === 'DIVIDE' ? 'หารจ่าย' : 'จ่ายแยก' }}
+                  {{ paymentMode === 'DIVINE' ? 'หารจ่าย' : 'จ่ายแยก' }}
                   {{ notiTableData.usernameInRoom.length }} คน
                 </div>
                 <div
@@ -134,28 +134,33 @@
             </Transition>
           </div>
           <div
+          v-if="notiTableData.order.status !== 'PAID'"
             class="grid grid-cols-4 gap-x-2 w-full bg-white h-14 md:px-10 px-2 items-center shadow text-main lg:pb-0 pb-48"
           >
             <button
               class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
               :disabled="notiTableData.usernameInRoom.length <= 1"
-              @click="paymentMode = 'DIVIDE'"
+              @click="changePaymentMode('DIVINE')"
             >
               หารเท่ากัน
             </button>
             <button
               class="w-full text-xs bg-gray-50 text-main py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white"
               :disabled="notiTableData.usernameInRoom.length <= 1"
-              @click="paymentMode = 'EACH'"
+              @click="changePaymentMode('EACH')"
             >
               จ่ายแยก
             </button>
             <button
-              @click="paymentMode = 'SUM'"
+              @click="changePaymentMode('SUM')"
               class="w-full bg-blue-400 text-white py-2 rounded-md shadow text-center disabled:bg-gray-300 disabled:text-white col-span-2"
             >
               {{ notiTableData.usernameInRoom.length > 1 ? 'จ่ายรวม' : 'จ่าย' }}
             </button>
+          </div>
+          <div class="h-20 flex flex-col justify-center items-center bg-white" v-else>
+            <IconifyIcon icon="icon-park-solid:success" class="text-green-400 text-2xl" />
+            <div>จ่ายสำเร็จ</div>
           </div>
         </div>
       </div>
@@ -207,14 +212,33 @@ import { Swaler } from '@/utils/helper/swaler';
 import numberWithCommas from '@/utils/helper/numberWithCommas';
 const { socket } = useSocketIO();
 
-const paymentMode = ref<'SUM' | 'DIVIDE' | 'EACH' | 'NONE'>('NONE');
+const paymentMode = ref<'SUM' | 'DIVINE' | 'EACH' | 'NONE'>('NONE');
+
+watch(notiTableData, () => {
+  if (notiTableData.value.order && notiTableData.value.order.bill && notiTableData.value.order.bill.method) {
+    paymentMode.value = notiTableData.value.order.bill.method;
+    console.log('called', paymentMode.value);
+  }
+})
+
+const changePaymentMode = (mode: string) => {
+  paymentMode.value = mode as any
+  const payload = {
+    orderId: notiTableData.value.order.id,
+    clientGroupId: notiTableData.value.clientGroupId,
+    tableToken: tableToken.value,
+    billMethod: mode,
+  }
+  console.log('handleUpdateOrder', payload)
+  socket.emit('handleUpdateOrder', payload)
+} 
 
 const eapi = useEapi();
 const toast = useToast();
 
 const userPayments = ref<{ username: string; price: number; id: string }[]>([]);
 watch(paymentMode, (val) => {
-  if (val === 'DIVIDE') {
+  if (val === 'DIVINE') {
     const each = orderedFoodPrice.value / notiTableData.value.usernameInRoom.length;
     userPayments.value = notiTableData.value.usernameInRoom.map((i: any) => {
       return {
@@ -236,6 +260,6 @@ watch(paymentMode, (val) => {
 
 const close = () => {
   modalCheckout.value = false;
-  console.log('close');
+  // console.log('close');
 };
 </script>

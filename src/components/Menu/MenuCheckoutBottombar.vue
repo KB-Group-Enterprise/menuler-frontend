@@ -1,13 +1,13 @@
 <template>
   <div class="w-full">
-    <div class="flex flex-nowrap justify-between p-4">
+    <div v-if="notiTableData.order && (notiTableData.order.clientState === 'CONFIRMED' || notiTableData.order.clientState === 'BILLING')" class="flex flex-nowrap justify-between p-4">
       <span>ราคารวม </span>
       <span class="text-yellow-500">{{ orderedFoodPrice }} บาท</span>
     </div>
     <div
       class="w-full bg-white h-14 flex md:px-10 px-2 items-center shadow text-main justify-between"
     >
-      <div class="w-full flex justify-center items-center">ชำระเงิน</div>
+      <div v-if="notiTableData.order && (notiTableData.order.clientState === 'CONFIRMED' || notiTableData.order.clientState === 'BILLING')" class="w-full flex justify-center items-center">ชำระเงิน</div>
     </div>
   </div>
 </template>
@@ -16,7 +16,7 @@
 import { useGlobal, closeSideBar } from "@/providers/global";
 import BaseToggleMenu from "../Base/BaseToggleMenu.vue";
 import { useAuth } from "@/providers/auth";
-import { orderedFoodPrice } from "@/composable/menu-state";
+import { orderedFoodPrice, notiTableData } from "@/composable/menu-state";
 
 // console.log(!(modalMenuSelect && modalMenuBasket));
 </script>

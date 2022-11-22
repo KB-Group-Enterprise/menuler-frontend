@@ -55,7 +55,11 @@
       </div>
     </div>
       <div class="flex flex-col px-4 mt-4 pb-24 lg:pb-0">
-        <div class="flex flex-nowrap justify-between p-4">
+        <div class="flex flex-nowrap justify-between px-4">
+          <span>จำนวนอาหาร</span>
+          <span>{{ selectedFoodList.length }} ชิ้น</span>
+        </div>
+        <div class="flex flex-nowrap justify-between px-4">
           <span>ราคารวม </span>
           <span class="text-yellow-500">{{ selectedFoodPrice }} บาท</span>
         </div>
@@ -99,7 +103,7 @@ const toast = useToast();
 
 const close = () => {
   modalMenuBasket.value = false;
-  console.log('close');
+  // console.log('close');
 };
 
 const findMenuById = (id: any) => {
@@ -148,6 +152,9 @@ const order = async () => {
       tableToken: tableToken.value,
       clientGroupId: clientGroupId.value,
     });
+    setTimeout(() => {
+      close()
+    }, 500)
   } else {
     const createPayload =  {
       foodOrderList: toRaw(selectedFoodList.value),
@@ -159,6 +166,9 @@ const order = async () => {
       createPayload
     })
     socket.emit('handleCreateOrder', createPayload);
+    setTimeout(() => {
+      close()
+    }, 500)
   }
 };
 </script>

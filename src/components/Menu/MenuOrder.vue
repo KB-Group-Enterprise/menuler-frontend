@@ -7,7 +7,7 @@
     </div>
     <div class="w-full" v-if="notiTableData.order">
       <div class="text-2xl text-center my-4">รายการที่สั่ง</div>
-      <div class="text-center my-4">{{ notiTableData.order.clientState }}</div>
+      <div class="text-center my-4">{{ translate(notiTableData.order.clientState) }}</div>
       <div class="px-12">
         <hr />
       </div>
@@ -51,7 +51,8 @@
       </div>
     </div>
     <div v-else>
-       <div class="text-2xl text-center my-4">ไม่พบออเดอร์</div>
+       <div class="text-2xl text-center my-4">รายการที่สั่ง</div>
+       <div class="text-gray-400 text-center my-4">ไม่พบรายการที่สั่ง</div>
     </div>
   </div>
 </template>
@@ -80,6 +81,7 @@ import { useSocketIO } from '@/composable/socket';
 import { string } from 'yup';
 import { useToast } from 'vue-toastification';
 import { Swaler } from '@/utils/helper/swaler';
+import { translate } from '@/utils/helper/translate'
 const { socket } = useSocketIO();
 
 const eapi = useEapi();
@@ -87,7 +89,7 @@ const toast = useToast();
 
 const close = () => {
   modalMenuOrder.value = false;
-  console.log('close');
+  // console.log('close');
 };
 
 const findMenuById = (id: any) => {
@@ -100,7 +102,7 @@ const getStatus = (status : any) => {
   if(status === 'COOKING') statusTH = 'กำลังปรุง'
   else if(status === 'SERVED') statusTH = 'เสิร์ฟแล้ว'
   else if(status === 'CANCEL') statusTH = 'ยกเลิก'
-  else if(status === 'PENDING') statusTH = 'กำลังปรุง'
+  else if(status === 'PENDING') statusTH = 'กำลังรอ'
   return statusTH
 }
 

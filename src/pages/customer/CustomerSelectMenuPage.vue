@@ -100,7 +100,7 @@
           class="absolute left-4 top-3" 
           @click="showUsers">
           <IconifyIcon icon="ci:group" class="text-3xl" />
-          <div class="top-5 right-2 absolute w-4 h-4" v-if="notiTableData.order">
+          <div class="top-5 right-2 absolute w-4 h-4" v-if="users && users.length">
             <div
               class="absolute inline-block top-2 -right-1 bottom-auto left-auto translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 py-1 w-5 text-xs leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-400 text-white rounded-full z-10"
             >
@@ -238,12 +238,11 @@ import {
   restaurantInfo,
   table,
 } from '@/composable/menu-state';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useEapi } from '@/providers';
 import { useSocketIO } from '@/composable/socket';
 import { POSITION, useToast } from 'vue-toastification';
 import BaseLoading from '@/components/Base/BaseLoading.vue';
-import router from '@/router';
 import Swal from 'sweetalert2';
 import BaseButtomTW from '@/components/Base/BaseButtomTW.vue';
 import { Vue3Lottie } from 'vue3-lottie';
@@ -252,6 +251,7 @@ import { getCookie, setCookie } from '@/utils/helper/cookieHelper';
 import { Swaler } from '@/utils/helper/swaler';
 const { socket } = useSocketIO();
 const toast = useToast();
+const router = useRouter();
 
 // const name = prompt('plz enter name');
 
@@ -321,14 +321,8 @@ socket.on('noti-table', (data) => {
   clientGroupId.value = data.clientGroupId;
   notiTableData.value = data;
 
-  if (notiTableData.value && notiTableData.value.order && notiTableData.value.order.status === 'PAID') {
-    if (!isPaidAlreadyToasted.value) {
-      Swaler.success('จ่ายเงินสำเร็จ', {
-      timerProgressBar: false,
-      timer: 1000
-    })
-    isPaidAlreadyToasted.value = true;
-    }
+  if (notiTableData.value && notiTableData.value.order && notiTableData.value.order.status === "CANCEL") {
+    router.push('/customer/cancel')
   }
 
   const message = data.message;
@@ -338,6 +332,7 @@ socket.on('noti-table', (data) => {
   });
   if (data.message && lastestMassage.value !== message) {
     lastestMassage.value = message;
+    console.log('toast called', data.message);
     toast(data.message);
   }
 
@@ -439,7 +434,7 @@ const checkout = () => {
 };
 
 const orderMenu = (item: any) => {
-  console.log('hello');
+  // console.log('hello');
 
   modalMenuOrder.value = true;
 };

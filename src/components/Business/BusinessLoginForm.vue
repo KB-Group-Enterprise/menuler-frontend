@@ -59,8 +59,8 @@ import { useRouter } from 'vue-router';
 const isLoading = ref(false);
 
 // const email = ref('admin@email.com');
-const email = ref('grey@gmail.com');
-const password = ref('Aa123456');
+const email = ref('');
+const password = ref('');
 
 
 const auth = useAuth();

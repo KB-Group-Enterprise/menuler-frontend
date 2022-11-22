@@ -52,23 +52,29 @@
         </div> -->
         <div class="w-11/12 flex flex-col items-center mt-4">
           <h1 class="text-center text-xl">รายการสั่งอาหาร</h1>
-          <div class="flex flex-row gap-2">
-            <BaseButtomTW @click="viewMode = 'TABLE'">แบบรายโต๊ะ</BaseButtomTW>
-            <BaseButtomTW @click="viewMode = 'MENU'">แบบรายรายการ</BaseButtomTW>
+          <div class="w-full flex justify-center pt-2">
+            <div class="w-full max-w-lg grid grid-cols-2 text-center">
+              <div class="border transition-all" :class="viewMode === 'TABLE' ? 'bg-blue-400 text-white' : ''" @click="viewMode = 'TABLE'">แบบรายโต๊ะ</div>
+              <div class="border transition-all" :class="viewMode === 'MENU' ? 'bg-blue-400 text-white' : ''" @click="viewMode = 'MENU'">แบบรายรายการ</div>
+            </div>
           </div>
-          <div v-if="viewMode === 'TABLE'" class="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div v-if="!orders.length" class="flex flex-col justify-center w-full items-center text-gray-400 my-4 mt-20 space-y-4">
+            <Vue3Lottie :animationData="LoadingLottie" :height="100" :width="100" />
+            <div class="animated animate-pulse">กำลังรอลูกค้าสั่งอาหาร</div>
+          </div>
+          <div v-if="viewMode === 'TABLE'" class="w-full grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4">
             <div
               v-for="order in orders"
               :key="order.id"
-              class="w-full bg-white rounded p-2 my-2 shadow-md"
+              class="w-full bg-gray-100 rounded p-4 my-2 shadow-md"
             >
               <div>
-                <div class="font-bold" v-if="order.table">
+                <div class="font-bold text-xl" v-if="order.table">
                   โต๊ะ {{ order.table.tableName }}
                 </div>
                 <div class="flex justify-between">
                   <span>{{ formatDateLocale(order.createAt) }}</span>
-                  <span class="font-bold">{{ order.clientState }}</span>
+                  <span class="font-bold">{{ translate(order.clientState) }}</span>
                 </div>
                 <div class="flex flex-nowrap justify-end space-x-2 my-2">
                   <div
@@ -114,11 +120,13 @@
                   <div
                     v-for="(food, index) in order.foodOrderList"
                     :key="food.id"
-                    class="w-full border-2 rounded p-1 px-2 my-1 fade-in"
+                    class="w-full border-2 rounded p-3 my-1 fade-in h-48 flex flex-col justify-between bg-white relative"
                   >
-                    <div class="flex justify-between flex-nowrap">
-                      <span class="">{{ index + 1 }}. {{ food.menu.foodName }}</span>
-                      <span class="font-bold">{{ food.status }}</span>
+                    <div class="mt-4">
+                    <div class="w-full text-center text-white rounded-t absolute top-0 left-0 transition-all" :class="food.status === 'SERVED' ? 'bg-green-400' : food.status === 'COOKING' ? 'bg-orange-400' : 'bg-gray-400'">{{ translate(food.status) }}</div>
+                    <div class="font-bold" v-if="food.clientId[0]">ผู้สั่ง {{ getClient(order,food.clientId[0]).username }}</div>
+                    <div class="flex flex-nowrap mt-2">
+                      <span class="">{{ food.menu.foodName }}</span>
                     </div>
                     <div class="ml-5">
                       <div
@@ -128,26 +136,36 @@
                         + {{ option.name }}
                       </div>
                     </div>
-                    <hr class="my-2" />
+                    </div>
+                    <!-- <hr class="my-2" /> -->
                     <div
                       v-show="
                         order.clientState !== 'PENDING' && order.clientState !== 'REJECT'
                       "
-                      class="flex justify-end space-x-2 w-full"
+                      class="flex flex-col space-y-2 w-full"
                     >
                       <!-- <BaseButtomTW 
                         v-show="!(food.status === 'COOKING' || food.status === 'SERVED')" 
                         color="warning" 
                         @click="updateFoodStatus(order, food.id, 'COOKING')"
                       > กำลังปรุง </BaseButtomTW> -->
-                      <BaseButtomTW
+                      <div
                         v-show="food.status !== 'SERVED'"
-                        class="w-full"
+                        class="w-full text-green-400 cursor-pointer"
                         color="success"
                         @click="updateFoodStatus(order, food.id, 'SERVED')"
                       >
                         ยืนยันการเซิร์ฟ
-                      </BaseButtomTW>
+                      </div>
+                      <div
+                        v-show="order.status !== 'BILLING' && food.status !== 'SERVED'"
+                        class="w-full text-red-400 cursor-pointer"
+                        color="danger"
+                        @click="deleteFoodOrder(order, food.id)"
+                      >
+                        <hr />
+                        ลบอาหาร 
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -156,6 +174,9 @@
           </div>
           <div v-else>
             <div class="w-full grid grid-cols-1 lg:grid-cols-4 gap-8 pt-8">
+              <div v-if="!foodPools.length" class="text-center text-gray-100 my-4">
+                ยังไม่มีรายการอาหาร
+              </div>
               <div
                 v-for="(food, index) in foodPools"
                 :key="'menu-' + food.id"
@@ -250,7 +271,7 @@
                       {{ food.table.tableName }}
                     </div>
                     <div>
-                      {{ food.clientState }}
+                      {{ translate(food.clientState) }}
                     </div>
                   </div>
                 </div>
@@ -332,6 +353,9 @@
               </div>
               <div class="modal-body relative p-4">
                 <div class="w-full">
+                  <div class="">
+                    <span class="font-bold">รายการอาหาร</span>
+                  </div>
                   <div
                     v-for="(food, index) in billData.foodOrderList"
                     :key="food.id"
@@ -350,6 +374,15 @@
                           <span>+ {{ option.name }}</span>
                           <span>+ {{ numberWithCommas(option.price) }}</span>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <span class="font-bold">รูปแบบการจ่าย</span> {{ translate(billData.billMethod) ?? 'จ่ายรวม' }}
+                    <div v-for="member in billData.memberPrices" :key="member.username">
+                      <div class="flex justify-between flex-nowrap">
+                        <span class="">- {{ member.username }}</span>
+                        <span class="">{{ numberWithCommas(member.price) }} บาท</span>
                       </div>
                     </div>
                   </div>
@@ -375,7 +408,7 @@
                   class="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out ml-1"
                   @click="
                     updateBillStatus(
-                      { order: billData.orderId, bill: { id: billData.billId } },
+                      { id: billData.orderId, bill: { id: billData.billId } },
                       'PAID'
                     )
                   "
@@ -408,6 +441,9 @@ import { useRouter } from "vue-router";
 import { string } from "yup";
 import { findOptionsByIdList, menuList } from "@/composable/menu-state";
 import numberWithCommas from "@/utils/helper/numberWithCommas";
+import { translate } from "@/utils/helper/translate";
+import { Vue3Lottie } from 'vue3-lottie';
+import LoadingLottie from '@/assets/lottie/loading.json';
 const isLoading = ref(false);
 const eapi = useEapi();
 const auth = useAuth();
@@ -425,12 +461,17 @@ const viewMode = ref<"TABLE" | "MENU">("TABLE");
 const billData = ref<any>(null);
 
 socket.on("currentOrder", (e) => {
-  console.log(e.orders);
+  console.log('currentOrder',e);
   orders.value = e.orders.map((i: any) => {
     i.open = false;
     return i;
   });
 });
+
+const getClient = (order: any, clientId: any) => {
+  const client = order.clientGroup.client.find((i:any) => i.id === clientId);
+  return client;
+}
 
 watch(orders, (val) => {
   // console.log('watch orders', val);
@@ -545,6 +586,15 @@ const updateFoodStatus = async (
   socket.emit("updateClientOrder", dto);
 };
 
+const deleteFoodOrder = async (order: any, foodId: any) => {
+  const dto: UpdateClientOrderDto = {
+    orderId: order.id,
+    deleteFoodOrderList: [foodId]
+  };
+  console.log(dto);
+  socket.emit("updateClientOrder", dto);
+}
+
 const confirmBill = async (order: any) => {
   const dto: UpdateClientOrderDto = {
     orderId: order.id,
@@ -574,7 +624,42 @@ const viewBill = (order: any) => {
     billId: order.bill.id,
     foodOrderList: order.foodOrderList,
     totalPrice: order.bill.totalPrice,
+    billMethod: order.bill.method,
+    memberPrices: [] as { username: string, price: number }[],
   };
+  if (billToShow.billMethod === 'EACH') {
+    const memberPriceMap = new Map<string, number>()
+    order.clientGroup.client.forEach((c: any) => {
+      memberPriceMap.set(c.id, 0)
+    })
+    billToShow.foodOrderList.forEach((i:any) => {
+      const clientId = i.clientId[0]
+      if (!memberPriceMap.get(clientId)) { memberPriceMap.set(clientId, 0)}
+      memberPriceMap.set(clientId, memberPriceMap.get(clientId) + i.netPrice)
+    })
+    memberPriceMap.forEach((v,k) => {
+      const user = order.clientGroup.client.find((i:any) => i.id === k);
+      billToShow.memberPrices.push({
+        username: user.username,
+        price: v
+      })
+    })
+  }
+
+  if (billToShow.billMethod === 'DIVINE') {
+    const memberPriceMap = new Map<string, number>()
+    order.clientGroup.client.forEach((c: any) => {
+      memberPriceMap.set(c.id, 0)
+    })
+    const dividedPrice = +(billToShow.totalPrice / memberPriceMap.size).toFixed(2);
+    memberPriceMap.forEach((v,k) => {
+      const user = order.clientGroup.client.find((i:any) => i.id === k);
+      billToShow.memberPrices.push({
+        username: user.username,
+        price: dividedPrice
+      })
+    })
+  }
 
   billData.value = billToShow;
 
