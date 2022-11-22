@@ -299,8 +299,8 @@ const connectTable = () => {
 
 socket.on('joinedTable', (data) => {
   console.log('joinedTable: ', data);
-  setCookie('username', data.username, 60 * 60 * 24);
-  setCookie('userId', data.userId, 60 * 60 * 24);
+  setCookie('username', data.username, 60 * 10);
+  setCookie('userId', data.userId, 60 * 10);
   username.value = data.username;
   userId.value = data.userId;
   // userId.value = data.userId;
@@ -322,7 +322,14 @@ socket.on('noti-table', (data) => {
   notiTableData.value = data;
 
   if (notiTableData.value && notiTableData.value.order && notiTableData.value.order.status === "CANCEL") {
+    socket.disconnect()
     router.push('/customer/cancel')
+  } else if (notiTableData.value && notiTableData.value.order && notiTableData.value.order.status === "PAID") {
+    socket.disconnect()
+    router.push('/customer/success')
+  } else if (notiTableData.value && notiTableData.value.order && notiTableData.value.order.clientState === 'BILLING') {
+    modalMenuOrder.value = true;
+    modalCheckout.value = true;
   }
 
   const message = data.message;

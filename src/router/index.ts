@@ -4,6 +4,7 @@ import { auth } from '../providers/auth';
 import TestingPage from '../pages/TestingPage.vue';
 import CustomerSelectMenuPage from '../pages/customer/CustomerSelectMenuPage.vue';
 import CustomerCanceledPage from '../pages/customer/CustomerCanceledPage.vue';
+import CustomerSuccessPage from '../pages/customer/CustomerSuccessPage.vue';
 import BusinessEditInformationPage from '../pages/business/BusinessEditInformationPage.vue';
 import BusinessMenuPage from '../pages/business/BusinessMenuPage.vue';
 import BusinessEditTableQRPage from '../pages/business/BusinessEditTableQRPage.vue';
@@ -32,6 +33,8 @@ const routes = [
   { name: 'Test', path: '/test', component: TestingPage },
   { name: 'CustomerSelectMenuPage', path: '/customer/menu/:token', component: CustomerSelectMenuPage },
   { name: 'CustomerCanceledPage', path: '/customer/cancel', component: CustomerCanceledPage },
+  { name: 'CustomerSuccessPage', path: '/customer/success', component: CustomerSuccessPage },
+
 
 
   { name: 'BusinessEditInformationPage', path: '/business', component: BusinessEditInformationPage, meta: { auth: true } },
