@@ -8,10 +8,10 @@ export interface WebsiteConfig {
 
 export function getBusinessEndpoint(eapi: EazyApi) {
     return {
-        sendRegister(data: postRegisterDto,useConfig?: UseEapiConfig) {
+        sendRegister(data: any,useConfig?: UseEapiConfig) {
             return eapi.useEazyApi({
                 method: 'post',
-                endpoint: '/auth/admin/register',
+                endpoint: '/restaurant',
                 data: data,
             },useConfig)
         },
@@ -29,7 +29,7 @@ export function getBusinessEndpoint(eapi: EazyApi) {
             })
         },
         getResturantById(id: string, useConfig?: UseEapiConfig) {
-            return eapi.useEazyApi<RestaurantListItem>({
+            return eapi.useEazyApi<{ restaurant: RestaurantListItem }>({
                 method: 'get',
                 endpoint: '/restaurant/:id',
                 params: { id },
@@ -41,6 +41,28 @@ export function getBusinessEndpoint(eapi: EazyApi) {
                 endpoint: '/restaurant',
                 data: payload
             }, useConfig);
+        },
+        updateRestaurantById(id: string,payload: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi<any>({
+                method: 'put',
+                endpoint: '/restaurant/:id',
+                params: {
+                    id,
+                },
+                data: payload
+            }, useConfig);
+        },
+        restaurantSummary(startDate?: string, endDate?: string) {
+            return eapi.useEazyApi<any>({
+                method: 'get',
+                endpoint: '/restaurant/get/summary',
+                query: {
+                    params: {
+                        startDate,
+                        endDate
+                    }
+                }
+            })
         }
     }
 }

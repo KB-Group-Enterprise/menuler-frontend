@@ -1,12 +1,13 @@
 <template>
   <div
     class="max-w-screen w-full relative"
-    :class="isModalOpen ? 'h-screen overflow-hidden' : ''"
+    :class="isModalOpen || modalMenuBasket || modalMenuSelect || modalCheckout || modalMenuOrder  ? 'h-screen overflow-hidden' : ''"
   >
-    <!-- <LayoutNavbar />
-    <LayoutSidebar /> -->
+    <LayoutNavbar v-if="auth.state.loggedIn && route.path.includes('business')" />
+    
+    <!-- <LayoutSidebar />  -->
     <Transition name="component-fade bg-red-500">
-      <div class="max-w-md mx-auto relative pb-14">
+      <div class="mx-auto relative pb-14">
         <!-- <layout-navbar /> -->
       <router-view />
       </div>
@@ -23,15 +24,23 @@ import LayoutSidebar from "@/components/Layout/LayoutSidebar.vue";
 import LayoutGlobalModal from "@/components/Layout/LayoutGlobalModal.vue";
 import { useGlobal } from "@/providers/global";
 import { computed, ref, toRaw, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import scrollToTop from "@/utils/helper/scrollToTop";
 import { useEapi } from "@/providers";
+import {modalMenuSelect,
+  modalMenuBasket,
+  modalCheckout,
+  modalMenuOrder,} from '@/composable/menu-state'; 
+import { useAuth } from "@/providers/auth";
 
 const global = useGlobal();
 const isSidebarOpen = computed(() => global.state.isSidebarOpen);
 const isModalOpen = computed(() => global.state.isModalOpen);
 
 const router = useRouter();
+const route = useRoute();
+// console.log(route)
+const auth = useAuth();
 
 
 watch(router.currentRoute, () => {

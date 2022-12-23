@@ -31,6 +31,10 @@ async function login(credentials: { email: string, password: string }) {
   }
 }
 
+function getToken() {
+  return localStorage.getItem('access_token');
+}
+
 async function loginWithToken(token: string) {
   try {
     // const res = await http.get('/t', { params: { t: token } } );
@@ -47,8 +51,11 @@ async function loginWithToken(token: string) {
 }
 
 async function fetchProfile() {
+  // state.loggedIn = true;
+  // state.user = {} as any;
+  // return {}
   try {
-    const res = await http.get('/auth/admin/profile');
+    const res = await http.get('/admin/profile');
     const profile = res.data.data;
     console.log(JSON.stringify(profile));
     state.loggedIn = true;
@@ -85,6 +92,7 @@ export const auth = {
   fetchProfile,
   loginWithToken,
   checkAcessToken,
+  getToken,
   state: readonly(state),
 };
 

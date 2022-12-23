@@ -12,7 +12,7 @@ import App from './App.vue';
 // assets files
 import '@/assets/css/global.css';
 import '@/assets/css/tailwind.css';
-import 'tw-elements';
+// import 'tw-elements';
 import 'sweetalert2/src/sweetalert2.scss';
 import 'vue-toastification/dist/index.css';
 import 'vue3-lottie/dist/style.css';
@@ -27,8 +27,13 @@ import i18n from './locale/i18n';
 // config vee-validate
 import { configure, defineRule } from "vee-validate";
 import { localize, setLocale } from '@vee-validate/i18n';
-import { required, between, confirmed, email } from '@vee-validate/rules';
+// eslint-disable-next-line camelcase
+import { required, between, confirmed, email, min_value } from '@vee-validate/rules';
 import th from '@vee-validate/i18n/dist/locale/th.json';
+
+// Date-Picker
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 configure({
   generateMessage: localize({
@@ -38,6 +43,7 @@ configure({
 setLocale('th');
 defineRule('required', required);
 defineRule('between', between);
+defineRule('min_value', min_value);
 defineRule('confirmed', confirmed);
 defineRule('email', email);
 
@@ -53,5 +59,7 @@ app.provide(AuthKey, auth);
 app.provide(GlobalKey, global);
 app.provide(EapiKey, initEapi());
 app.component('IconifyIcon', Icon);
+// eslint-disable-next-line vue/multi-word-component-names
+app.component('Datepicker', Datepicker);
 
 app.mount('#app');

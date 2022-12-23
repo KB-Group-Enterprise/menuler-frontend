@@ -18,6 +18,84 @@
         <ErrorMessage class="text-red-500 text-sm" name="email" />
       </div>
       <div class="mb-4">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+          ชื่อจริง
+        </label>
+        <Field
+            as="input"
+            name="firstName"
+            rules="required"
+            :validate-on-input="true"
+            placeholder="ชื่อจริง"
+            v-model="firstName"
+            class="w-full p-2 outline-none transition-colors bg-main-100 rounded-t-md rounded-b-none border-b-2 border-main-300 focus:border-main-600 focus:bg-main-200"
+        >
+        </Field>
+        <ErrorMessage class="text-red-500 text-sm" name="firstName" />
+      </div>
+      <div class="mb-4">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+          นาทสกุล
+        </label>
+        <Field
+            as="input"
+            name="lastName"
+            rules="required"
+            :validate-on-input="true"
+            placeholder="นาทสกุล"
+            v-model="lastName"
+            class="w-full p-2 outline-none transition-colors bg-main-100 rounded-t-md rounded-b-none border-b-2 border-main-300 focus:border-main-600 focus:bg-main-200"
+        >
+        </Field>
+        <ErrorMessage class="text-red-500 text-sm" name="lastName" />
+      </div>
+      <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+        รูปภาพ
+      </label>
+      <div class="flex justify-center">
+      <div class="border p-2 mb-4 transition hover:border-2 cursor-pointer" @click="selectUploadInput()">
+        <div v-if="previewUrl">
+          <img :src="previewUrl" class="object-cover" />
+        </div>
+        <div v-else>
+          <img src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png" alt="placeholder" />
+        </div>
+        <input id="image-input" hidden type='file' @change="readURL" />
+      </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+          ชื่อร้าน
+        </label>
+        <Field
+            as="input"
+            name="restaurantName"
+            rules="required"
+            :validate-on-input="true"
+            placeholder="ชื่อร้าน"
+            v-model="restaurantName"
+            class="w-full p-2 outline-none transition-colors bg-main-100 rounded-t-md rounded-b-none border-b-2 border-main-300 focus:border-main-600 focus:bg-main-200"
+        >
+        </Field>
+        <ErrorMessage class="text-red-500 text-sm" name="restaurantName" />
+      </div>
+      <div class="mb-4">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+          ที่อยู่ร้านอาหาร (ลิง์ google maps)
+        </label>
+        <Field
+            as="input"
+            name="location"
+            rules="required"
+            :validate-on-input="true"
+            placeholder="https://goo.gl/maps/xxxxxxxx"
+            v-model="location"
+            class="w-full p-2 outline-none transition-colors bg-main-100 rounded-t-md rounded-b-none border-b-2 border-main-300 focus:border-main-600 focus:bg-main-200"
+        >
+        </Field>
+        <ErrorMessage class="text-red-500 text-sm" name="location" />
+      </div>
+      <div class="mb-4">
         <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
           รหัสผ่าน
         </label>
@@ -73,6 +151,31 @@ const isLoading = ref(false);
 const email = ref('');
 const password = ref('');
 const confirmation = ref('');
+const restaurantName = ref('');
+const location = ref('');
+const firstName = ref('');
+const lastName = ref('');
+const imgFile = ref<any>();
+const previewUrl = ref('');
+
+const selectUploadInput = () => {
+  const imageInput = document.getElementById('image-input');
+  imageInput?.click();
+}
+
+const readURL = (input: any) => {
+            const target = input.target
+            if (target.files && target.files[0]) {
+                imgFile.value = target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(target.files[0]);
+                reader.onload = (e: any) => {
+                  if (e.target.result) {
+                    previewUrl.value = e.target.result;
+                  }
+                }
+            }
+}
 
 const auth = useAuth();
 const eapi = useEapi();
@@ -81,7 +184,18 @@ const router = useRouter();
 
 const submit = async () => {
     isLoading.value = true;
-    const result = await eapi.business.sendRegister({ email: email.value, password: password.value }, { noticeSuccess: true, fallbackMessageSuccess: 'สมัครสมาชิกสำเร็จ' });
+
+    const payload = new FormData();
+
+    payload.append('email',email.value)
+    payload.append('password', password.value)
+    payload.append('restaurantName',restaurantName.value)
+    payload.append('location',location.value)
+    payload.append('restaurantImage',imgFile.value)
+    payload.append('firstname',firstName.value)
+    payload.append('lastname',lastName.value)
+
+    const result = await eapi.business.sendRegister(payload, { noticeSuccess: true, fallbackMessageSuccess: 'สมัครสมาชิกสำเร็จ' });
     if (result.success) {
         login(email.value, password.value)
     }

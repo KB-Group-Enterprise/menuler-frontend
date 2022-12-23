@@ -1,19 +1,13 @@
 version: '3.4'
 services:
   webapp:
-    container_name: golf-frontend
     build:
       context: .
       dockerfile: Dockerfile
       target: prod
-    image: frontend
-    networks:
-      - default
-      - bangpragolfclub-reverseproxy_default
-
+    image: ghcr.io/kb-group-enterprise/menuler-frontend:dev 
 #define network
 networks:
   default:
-    driver: bridge
-  bangpragolfclub-reverseproxy_default:
-    external: true
+    external:
+      name: capstone-dev

@@ -1,5 +1,6 @@
 import { UseEapiConfig,EazyApi} from '../eapi';
 import { boolean } from "yup"
+import { BussinessMenuItem } from '@/types/dto.types';
 
 export interface WebsiteConfig {
     isEnablePayment: boolean;
@@ -21,5 +22,78 @@ export function getMenuEndpoint(eapi: EazyApi) {
                 params:{token}
             },useConfig)
         },
+        getMenuByRestaurantId(id:string,useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi<{ menu: BussinessMenuItem[] }>({
+                method: 'get',
+                endpoint: '/menu/restaurant/:id',
+                params: {id}
+            },useConfig)
+        },
+        createOrder(payload:any,useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/order/create',
+                data: payload 
+            },useConfig)
+        },
+        adminCreateMenu(payload: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/menu',
+                data: payload 
+            },useConfig)
+        },
+        adminUpdateMenu(id: string, payload: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'put',
+                endpoint: '/menu/:id',
+                params: {
+                    id: id
+                },
+                data: payload 
+            },useConfig)
+        },
+        deleteMenu(id: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'delete',
+                endpoint: '/menu/:id',
+                params: {
+                    id: id
+                },
+            },useConfig)
+        },
+        getMenuByMenuId(id: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'get',
+                endpoint: '/menu/:id',
+                params: {
+                    id: id
+                }
+            },useConfig)
+        },
+        createMenuOption(dto: any, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'post',
+                endpoint: '/option',
+                data: dto
+            },useConfig)
+        },
+        updateMenuOption(id: string,dto: any, useConfig: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'put',
+                endpoint: '/option/:id',
+                data: dto,
+                params: {
+                    id: id
+                }
+            }, useConfig);
+        },
+        deleteMenuOption(optiondId: string, useConfig?: UseEapiConfig) {
+            return eapi.useEazyApi({
+                method: 'delete',
+                endpoint: '/option/:id',
+                params: { id: optiondId }
+            }, useConfig)
+        }
     }
 }

@@ -43,7 +43,7 @@ const props = defineProps({
     type: String,
     required: false,
     default:
-      "w-full rounded-lg flex flex-rows items-center justify-center space-x-3 h-10",
+      "w-full rounded-lg flex flex-rows items-center justify-center space-x-3 text-sm h-10",
   },
   color: {
     type: String,
@@ -54,7 +54,7 @@ const props = defineProps({
   texts: {
     type: String,
     required: false,
-    default: "font-bold text-xl",
+    default: "font-bold text-sm",
   },
 });
 const bigStyles =

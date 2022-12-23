@@ -5,6 +5,7 @@ import { http } from '../http';
 import { getBusinessEndpoint } from './endpoints/business.endpoint';
 import { getMenuEndpoint } from './endpoints/menu.endpoint';
 import { getPaymentEndpoint } from './endpoints/payment.endpoint';
+import { getTableEndpoint } from './endpoints/table.enpoint';
 
 type CreateEapiConfigBase = {
   method: 'get' | 'post' | 'patch' | 'put' | 'delete';
@@ -47,6 +48,7 @@ export function initEapi() {
     payment: getPaymentEndpoint(eapi),
     business: getBusinessEndpoint(eapi),
     menu: getMenuEndpoint(eapi),
+    table: getTableEndpoint(eapi),
   };
 }
 export class EazyApi {

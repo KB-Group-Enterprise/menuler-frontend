@@ -1,5 +1,5 @@
 <template>
-  <LayoutContainer>404 Not Found</LayoutContainer>
+  <LayoutContainer>Information Page</LayoutContainer>
 </template>
 
 <script setup lang="ts">
