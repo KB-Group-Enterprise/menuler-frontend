@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
       target: prod
     image: ghcr.io/kb-group-enterprise/menuler-frontend:dev 
+    ports:
+      - 3000:3000
 #define network
 networks:
   default:
